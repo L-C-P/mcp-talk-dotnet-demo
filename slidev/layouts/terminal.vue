@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, PropType} from 'vue'
-import {handleBackground} from "../layoutHelper";
+import {resolveAssetUrl} from "../layoutHelper";
 
 const props = defineProps({
   cast: {
@@ -9,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const file = computed(() => `./assets/casts/${props.cast}.cast`);
+const file = computed(() => resolveAssetUrl(`/assets/casts/${props.cast}`));
 </script>
 
 <template>

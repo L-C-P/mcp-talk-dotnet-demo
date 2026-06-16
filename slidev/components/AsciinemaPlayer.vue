@@ -21,8 +21,12 @@ export default {
       return;
     }
 
+    const source = this.src?.startsWith("/")
+      ? this.src
+      : import.meta.env.BASE_URL + this.src;
+
     this.player = AsciinemaPlayer.create(
-      import.meta.env.BASE_URL + this.src,
+      source,
       targetElement,
       this.playerProps
     );

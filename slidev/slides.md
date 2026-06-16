@@ -78,7 +78,7 @@ hideInToc: true
 
 ---
 layout: terminal
-cast: demo
+cast: demo.cast
 ---
 
 ---
@@ -879,5 +879,5 @@ background: /assets/BLMeetingBackground.png
 
 ---
 layout: terminal
-cast: sw
+cast: sw.cast
 ---
