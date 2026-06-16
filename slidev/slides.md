@@ -26,6 +26,10 @@ background: /assets/BLMeetingBackground.png
 *The show must go on.*<br/>
 *Oberhausen. 2026.*
 
+<!--
+- Zeit: 0 min
+-->
+
 ---
 layout: intro
 hideInToc: true
@@ -36,6 +40,10 @@ hideInToc: true
 The Director Between AI and Enterprise Data
 
 <!--
+- Zeit: 2 min
+- Kurz die Energie des Event-Themas aufgreifen: Heute sind wir alle Stars – und **StarAgent** managed die Tour.
+- Erwartung setzen: Kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
+- Ziel benennen: Jede Person hier soll danach in der Lage sein, den Kommunikationsfluss zwischen LLM und MCP zu erklären – und wissen, wie sie selbst einen Server bauen kann.
 -->
 
 ---
@@ -50,6 +58,7 @@ Architect, AI-Ambassador<br/>
 BL Microsoft, Hannover
 
 <!--
+- Zeit: 0,5 min
 -->
 
 ---
@@ -58,28 +67,18 @@ class: toc
 hideInToc: true
 ---
 
-# _Today's Setlist_
+# *Today's Setlist*
 
 <Toc :columns="2" />
 
 <!--
-- Zeit: 2 min
-- Kurz die Energie des Event-Themas aufgreifen: Heute sind wir alle Stars – und StarAgent managed die Tour.
-- Erwartung setzen: Kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
-- Ziel benennen: Jede Person hier soll danach in der Lage sein, den Kommunikationsfluss zwischen LLM und MCP zu erklären – und wissen, wie sie selbst einen Server bauen kann.
+- Zeit: 1 min
+- Die Präsentation gliedert sich in drei Teile:
+  - Was ist "MCP"
+  - Wie funktioniert "MCP"
+  - Wir implementieren "MCP"
+- Es gibt Folien zur Verteifung, die wir überspringen.
 -->
-
----
-layout: center
-hideInToc: true
----
-
-# DEMO
-
----
-layout: terminal
-cast: /assets/casts/demo.cast
----
 
 ---
 transition: slide-up
@@ -102,6 +101,7 @@ transition: slide-up
 - Zeit: 2 min
 - Pain Points aus dem eigenen Umfeld nennen: Wer hat schon mal einen eigenen Connector für ein LLM gebaut?
 - Analogie: Vor USB gab es für jedes Gerät einen anderen Stecker. MCP ist der USB-Standard für AI-Integrationen.
+- Herkunft: MCP wurde von **Anthropic** entwickelt und im **November 2024** als offener Standard veröffentlicht. Seitdem wird es von Microsoft, GitHub, Google und zahlreichen anderen Unternehmen aktiv unterstützt und weiterentwickelt.
 - Kernbotschaft: MCP ist kein Framework, kein Produkt – es ist ein offenes Protokoll, das den Vertrag zwischen AI-Host und externer Fähigkeit definiert.
 -->
 
@@ -123,18 +123,17 @@ zoom: 0.95
 | **Chrome DevTools**   | Live browser inspection, console, network, DOM |
 
 <!--
-- Zeit: 2 min
+- Zeit: 1 min
 - Hinweis: Die Verzeichnis-URLs sind später auf der Folie "Where to go next" aufgeführt.
-- Überleitung: Was genau ist dieses Protokoll?
+- **Überleitung:** Was genau ist dieses Protokoll?
 -->
 
+---
 ---
 
 # What Is MCP?
 
 ### Model Context Protocol (MCP)
-
-> An open standard that defines how AI applications securely and structurally connect to tools and data sources.
 
 - **Wire protocol:** JSON-RPC 2.0 – both sides speak structured text
 - **Capability model:** Tools · Resources · Prompts
@@ -142,10 +141,11 @@ zoom: 0.95
 - **Interoperability:** one server works with any MCP-compatible host
 - **Transports:** `stdio` for local processes · `Streamable HTTP` for remote services
 
+> An open standard that defines how AI applications securely and structurally connect to tools and data sources.
+
 <!--
 - Zeit: 2 min
 - MCP als Protokoll einordnen, nicht als Bibliothek oder Framework.
-- Herkunft: MCP wurde von **Anthropic** entwickelt und im **November 2024** als offener Standard veröffentlicht. Seitdem wird es von Microsoft, GitHub, Google und zahlreichen anderen Unternehmen aktiv unterstützt und weiterentwickelt.
 - JSON-RPC 2.0 hervorheben: Host und Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
 - Transport kurz erwähnen: lokal läuft es über stdio (Standard-Ein-/Ausgabe), remote über HTTP. Details kommen im Architektur-Diagramm.
 - Interoperabilität betonen: ein MCP-Server in .NET funktioniert mit GitHub Copilot, Claude Desktop, VS Code und jedem anderen MCP-Host.
@@ -183,11 +183,14 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 2 min
-- Die drei Rollen klar abgrenzen: Host = AI-App, Client = Protokollschicht im Host, Server = Fähigkeiten-Anbieter.
+- Zeit: 3 min
+- Die drei Rollen klar abgrenzen:
+  - Host = AI-App
+  - Client = Protokollschicht im Host
+  - Server = Fähigkeiten-Anbieter
 - Wichtiger Punkt: Host und Server können unabhängig voneinander entwickelt werden – das ist die Stärke des Standards.
 - Der Host kann mehrere Clients gleichzeitig nutzen.
-- Diagramm erläutern: links lokal über stdio (einfach, schnell, für Entwicklung), rechts remote über HTTP (produktionstauglich, skalierbar).
+- Diagramm erläutern: lokal über stdio (einfach, schnell, für Entwicklung), remote über HTTP (produktionstauglich, skalierbar).
 - Beispiel aus der Praxis: VS Code mit GitHub Copilot ist der Host + Client. Unser StarAgent-Server ist der MCP Server.
 -->
 
@@ -210,11 +213,11 @@ hideInToc: true
     - Completely independent of host and model
 
 <!--
-- Zeit: 2 min
-- Die drei Rollen klar abgrenzen: Host = AI-App, Client = Protokollschicht im Host, Server = Fähigkeiten-Anbieter.
-- Wichtiger Punkt: Host und Server können unabhängig voneinander entwickelt werden – das ist die Stärke des Standards.
-- Diagramm erläutern: links lokal über stdio (einfach, schnell, für Entwicklung), rechts remote über HTTP (produktionstauglich, skalierbar).
-- Beispiel aus der Praxis: VS Code mit GitHub Copilot ist der Host + Client. Unser StarAgent-Server ist der MCP Server.
+- Zeit: 0,5 min
+- Die drei Rollen klar abgrenzen:
+  - Host = AI-App
+  - Client = Protokollschicht im Host
+  - Server = Fähigkeiten-Anbieter
 -->
 
 ---
@@ -233,7 +236,10 @@ transition: slide-up
 
 <!--
 - Zeit: 2 min
-- Die Semantik der drei Primitive präzise machen: Tool = execute, Resource = read, Prompt = orchestrate.
+- Die Semantik der drei Primitive präzise machen:
+  - Tool = execute
+  - Resource = read
+  - Prompt = orchestrate
 - StarAgent-Beispiele direkt zeigen: Wir bauen gleich alle drei live.
 - Rider erklären: Ein Rider ist das echte Dokument, das jeder Künstler vor einem Konzert einreicht – Bühnenanforderungen, Catering, Sonderwünsche. Van Halens berühmteste Forderung: „Absolutely NO brown M&Ms.“ Das ist ein perfektes Beispiel für eine Resource – stabil, adressierbar, read-only.
 - Enterprise-Brücke: Statt Rider → euer Konfigurations-Dokument, euer OpenAPI-Spec, euer Feature-Spec. Das Prinzip ist identisch.
@@ -284,7 +290,7 @@ One server works with every MCP-compatible host – the host handles the transla
 - Zeit: 2 min
 - Kernbotschaft deutlich machen: LLM und MCP-Server sprechen **nie direkt** miteinander. Der Host ist immer der Vermittler und die Kontrollinstanz.
 - JSON-RPC 2.0 ist kein Hexenwerk – es sind strukturierte Textnachrichten mit `method`, `params` und `result`.
-- Schritt 1–2 folgt auf den nächsten Folien: Der Host fragt den Server nach Fähigkeiten und übersetzt sie in Function-Definitions für das Modell.
+- Details folgen auf den nächsten Folien: Der Host fragt den Server nach Fähigkeiten und übersetzt sie in Function-Definitions für das Modell.
 -->
 
 ---
@@ -332,8 +338,8 @@ transition: slide-up
 ```
 
 <!--
-- Zeit: 3 min
-- Schritt 1–2 ist der Discovery-Vorgang: Der Host fragt den Server nach seinen Fähigkeiten und übersetzt das in Function-Definitions für das Modell.
+- Zeit: 0 min
+- Discovery-Vorgang: Der Host fragt den Server nach seinen Fähigkeiten und übersetzt das in Function-Definitions für das Modell.
 - Highlight: Das LLM „sieht“ nur die Tool-Schemata – es weiß nicht, ob dahinter .NET, Python oder ein Toaster steckt.
 -->
 
@@ -376,8 +382,7 @@ transition: slide-up
 ```
 
 <!--
-- Zeit: 3 min
-- Schritt 1–2 ist der Discovery-Vorgang: Der Host fragt den Server nach seinen Fähigkeiten und übersetzt das in Function-Definitions für das Modell.
+- Zeit: 0 min
 - Highlight: Das LLM „sieht“ nur die Tool-Schemata – es weiß nicht, ob dahinter .NET, Python oder ein Toaster steckt.
 -->
 
@@ -401,9 +406,8 @@ transition: slide-up
 ```
 
 <!--
-- Zeit: 2 min
-- Schritt 3: Das LLM entscheidet, ob es ein Tool aufrufen will – es gibt einfach JSON zurück. Keine Magie.
-- Schritt 4–5: Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
+- Zeit: 0 min
+- Das LLM entscheidet, ob es ein Tool aufrufen will – es gibt einfach JSON zurück. Keine Magie.
 -->
 
 ---
@@ -431,9 +435,8 @@ transition: slide-up
 ```
 
 <!--
-- Zeit: 2 min
-- Schritt 3: Das LLM entscheidet, ob es ein Tool aufrufen will – es gibt einfach JSON zurück. Keine Magie.
-- Schritt 4–5: Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
+- Zeit: 0 min
+- Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
 -->
 
 ---
@@ -460,9 +463,8 @@ hideInToc: true
 ```
 
 <!--
-- Zeit: 2 min
-- Schritt 3: Das LLM entscheidet, ob es ein Tool aufrufen will – es gibt einfach JSON zurück. Keine Magie.
-- Schritt 4–5: Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
+- Zeit: 0 min
+- Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
 -->
 
 ---
@@ -492,8 +494,8 @@ sequenceDiagram
 ```
 
 <!--
-- Zeit: 2 min
-- Lifecycle-Tabelle nur kurz streifen: Diese Calls gibt es, der Host verwaltet sie automatisch. Man muss sie nicht selbst implementieren – das SDK erledigt das.
+- Zeit: 0,5 min
+- Lifecycle-Tabelle nur kurz streifen: Diese Calls gibt es, der Host verwaltet sie automatisch. Man muss sie nicht selbst implementieren – **das SDK erledigt das**.
 - Sequenzdiagramm ist das Herzstück: Hier wird sichtbar, dass der Host die Kontrolle behält. Das LLM macht einen Vorschlag (Tool Call), aber der Host entscheidet, ob er ausgeführt wird.
 - Wichtige Botschaft: Der Host ist die Sicherheitsinstanz – nicht das LLM.
 - Punchline zum Diagramm: Das letzte Ergebnis – „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
@@ -514,13 +516,10 @@ hideInToc: true
 | Invocation | `tools/call` · `resources/read` · `prompts/get`  | Client → Server |
 
 <!--
-- Zeit: 2 min
-- Lifecycle-Tabelle nur kurz streifen: Diese Calls gibt es, der Host verwaltet sie automatisch. Man muss sie nicht selbst implementieren – das SDK erledigt das.
-- Sequenzdiagramm ist das Herzstück: Hier wird sichtbar, dass der Host die Kontrolle behält. Das LLM macht einen Vorschlag (Tool Call), aber der Host entscheidet, ob er ausgeführt wird.
-- Wichtige Botschaft: Der Host ist die Sicherheitsinstanz – nicht das LLM.
-- Punchline zum Diagramm: Das letzte Ergebnis – „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
+- Zeit: 0 min
 -->
 
+---
 ---
 
 # Microsoft MCP SDK for .NET
@@ -544,7 +543,17 @@ dotnet new mcpserver -n StarAgent.McpServer
 dotnet add package ModelContextProtocol
 ```
 
-### Register the server in your MCP host (`mcp.json`)
+<!--
+- Zeit: 2 min
+- SDK einordnen: War gerade noch Preview-Paket.
+-->
+
+---
+---
+
+# Register the server in your MCP host (`mcp.json`)
+
+### Development with stdio transport
 
 ```json
 {
@@ -563,8 +572,7 @@ dotnet add package ModelContextProtocol
 ```
 
 <!--
-- Zeit: 2 min
-- SDK einordnen: Preview-Paket, aber aktiv von Microsoft entwickelt. API-Namen können sich noch leicht ändern – immer Paketversion prüfen.
+- Zeit: 1 min
 - Überleitung zur nächsten Folie: Die eigentliche Registrierung der Capabilities läuft attributbasiert.
 -->
 
@@ -597,7 +605,17 @@ public class ChartTools
 [McpServerPromptType]     →   [McpServerPrompt(Name = "concert_press_release")]
 ```
 
-### Host-side: discover and invoke
+<!--
+- Zeit: 2 min
+- Attribute-Ansatz betonen: Wer .NET kennt, fühlt sich sofort zu Hause. Kein Boilerplate, kein manuelles JSON-Parsing.
+- Description-Attribute sind entscheidend: Sie landen direkt im Tool-Schema, das das LLM sieht. Je klarer die Description, desto besser die Tool-Auswahl durch das Modell.
+- Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
+-->
+
+---
+---
+
+# Host-side: discover and invoke
 
 ```csharp
 await using var client = await McpClient.CreateAsync(transport);
@@ -608,20 +626,19 @@ var result = await client.CallToolAsync("get_chart_position",
 ```
 
 <!--
-- Zeit: 2 min
-- Attribute-Ansatz betonen: Wer .NET kennt, fühlt sich sofort zu Hause. Kein Boilerplate, kein manuelles JSON-Parsing.
-- Description-Attribute sind entscheidend: Sie landen direkt im Tool-Schema, das das LLM sieht. Je klarer die Description, desto besser die Tool-Auswahl durch das Modell.
-- Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir in Folie 6 als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
+- Zeit: 0,5 min
 - Überleitung zur Demo: Genug Theorie. Bauen wir das jetzt live.
 -->
 
+---
+layout: codeeditor
 ---
 
 # Live Demo: StarAgent MCP Server (stdio)
 
 ### Bootstrap (`Program.cs`)
 
-```csharp
+```csharp {monaco}  {height:'250px'}
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
@@ -633,6 +650,31 @@ builder.Services
 
 await builder.Build().RunAsync();
 ```
+
+<!--
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly()
+    .WithResourcesFromAssembly()
+    .WithPromptsFromAssembly();
+
+await builder.Build().RunAsync();
+
+- Zeit: 8 min
+- Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
+- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
+- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
+- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
+- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
+- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
+- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+-->
+
+---
+---
 
 ### Demo capabilities
 
@@ -651,6 +693,8 @@ await builder.Build().RunAsync();
 - Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
 -->
 
+---
+layout: codeeditor
 ---
 
 # HTTP Transport: Reference
@@ -880,4 +924,16 @@ background: /assets/BLMeetingBackground.png
 ---
 layout: terminal
 cast: /assets/casts/sw.cast
+---
+
+---
+layout: center
+hideInToc: true
+---
+
+# DEMO
+
+---
+layout: terminal
+cast: /assets/casts/demo.cast
 ---
