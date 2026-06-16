@@ -21,18 +21,8 @@ export default {
       return;
     }
 
-    const source = this.src && (
-      this.src.startsWith("/") ||
-      this.src.startsWith("./") ||
-      this.src.startsWith("../") ||
-      this.src.startsWith("http://") ||
-      this.src.startsWith("https://")
-    )
-      ? this.src
-      : import.meta.env.BASE_URL + this.src;
-
     this.player = AsciinemaPlayer.create(
-      source,
+      this.src,
       targetElement,
       this.playerProps
     );
@@ -42,7 +32,8 @@ export default {
         const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
 
         if (isVisible && !this.wasVisible && this.player) {
-          this.player.pause()
+          if (this.playerProps?.delayStart)
+            this.player.pause()
 
           if (this.playerProps?.numberStartAt)
             this.player.seek(this.playerProps.numberStartAt);
