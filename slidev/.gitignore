@@ -4,3 +4,4 @@ node_modules
 .vite-inspect
 .remote-assets
 components.d.ts
+dist/
