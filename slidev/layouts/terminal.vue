@@ -4,12 +4,12 @@ import {resolveAssetUrl} from "../layoutHelper";
 
 const props = defineProps({
   cast: {
-    type: String as PropType<String>,
+    type: String as PropType<string>,
     required: true
   },
 })
 
-const file = computed(() => resolveAssetUrl(`/assets/casts/${props.cast}`));
+const file = computed(() => resolveAssetUrl(props.cast));
 </script>
 
 <template>
