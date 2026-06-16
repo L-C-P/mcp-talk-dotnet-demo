@@ -6,10 +6,6 @@
   url("./assets/HackNerdFontComplete-Regular.ttf") format("truetype");
 }
 
-:root {
-  --brand-primary: #216ec7;
-  --slidev-theme-primary: #216ec7;
-}
 
 .slidev-layout {
   background: #ffffff;
@@ -25,7 +21,7 @@
 .slidev-layout :is(h1, h2, h3, h4, h5, h6) {
   font-family: 'Fira Sans Condensed', 'Fira Sans', 'Source Sans 3', 'Inter', 'Segoe UI', Arial, sans-serif;
   font-weight: 700;
-  color: var(--brand-primary);
+  color: var(--slidev-theme-primary, #216ec7);
 }
 
 .slidev-layout :is(i, em) {
@@ -53,7 +49,7 @@
 }
 
 .slidev-layout :is(table, th, td) {
-  border-color: var(--brand-primary);
+  border-color: var(--slidev-theme-primary, #216ec7);
 }
 
 .slidev-layout.cover h1 {
@@ -67,12 +63,12 @@
   font-weight: bold;
   line-height: 2.5rem;
   opacity: 1;
-  color: var(--brand-primary);
+  color: var(--slidev-theme-primary, #216ec7);
 }
 
 .slidev-layout.intro {
   color: white;
-  background: var(--brand-primary);
+  background: var(--slidev-theme-primary, #216ec7);
 }
 
 .slidev-layout.intro :is(h1, h2, h3, h4, h5, h6, p, li, blockquote, table, th, td, a) {
@@ -130,7 +126,7 @@
 .slidev-layout.toc ol li::marker,
 .slidev-layout.toc .slidev-toc a,
 .slidev-layout.toc .slidev-toc a p {
-  color: var(--brand-primary);
+  color: var(--slidev-theme-primary, #216ec7);
   font-weight: bold;
   text-decoration: none;
   border: none;
