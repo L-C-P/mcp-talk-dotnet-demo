@@ -28,6 +28,5 @@ pnpm-debug.log*
 # .NET build output
 **/bin/
 **/obj/
-/slidev/dist/
 
 *.sln.DotSettings.user
