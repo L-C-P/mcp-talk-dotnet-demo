@@ -31,3 +31,9 @@ The demo workspace is prepared in `demos/` with dedicated folders for:
 - `StarAgent.McpServer.AzureFunctions`
 
 Each folder includes a README with scope and next implementation steps.
+
+## License
+- Source code: Apache License 2.0 (`LICENSE`)
+- Documentation and slides: Creative Commons Attribution 4.0 (`LICENSE-docs`)
+
+Attribution must be preserved as stated in `NOTICE` (Denis Sowa).
