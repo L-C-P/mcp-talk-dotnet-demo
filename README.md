@@ -12,7 +12,7 @@ This repository contains the presentation materials and implementation workspace
 - Slide source: `slidev/slides.md`
 - Built output folder: [`slidev/dist`](slidev/dist)
 - Presentation entry point: [`slidev/dist/index.html`](slidev/dist/index.html)
-- Presentation URL (repo-based GitHub Pages): `https://l-c-p.github.io/mcp-talk-dotnet-demo/slidev/dist/`
+- Presentation URL (repo-based GitHub Pages): [https://l-c-p.github.io/mcp-talk-dotnet-demo/slidev/dist/](https://l-c-p.github.io/mcp-talk-dotnet-demo/slidev/dist/)
 
 The default Slidev build in `slidev/package.json` is configured for this path (`/mcp-talk-dotnet-demo/slidev/dist/`), so the presentation can be opened directly from the `slidev/dist` folder URL.
 
