@@ -2,6 +2,27 @@
 
 ## Slide text (EN)
 
+### The LLM never sees MCP – the host is the translator
+
+The **host** is embedded in the client application (Claude Code, Warp, GitHub Copilot, …).
+It knows two languages: **MCP** on one side, and the **LLM's native format** on the other.
+
+```
+MCP Server (.NET)
+    ↕  always: MCP / JSON-RPC 2.0
+Host (embedded in client)
+    ↕  translated to the LLM's format:
+        Claude Code / Warp  →  Anthropic Tool Use  →  injected into system prompt
+        GitHub Copilot       →  OpenAI Function Calling
+        Gemini               →  Google Function Calling
+LLM
+```
+
+The MCP server never knows which LLM or client is on the other end.
+One server works with every MCP-compatible host – the host handles the translation.
+
+---
+
 ### It's just text – structured text
 
 LLM and MCP server never talk directly. The **host** bridges both sides.

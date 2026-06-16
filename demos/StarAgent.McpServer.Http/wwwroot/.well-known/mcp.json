@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "star-agent": {
+      "url": "http://localhost:3001/mcp",
+      "name": "StarAgent",
+      "description": "AI tour manager for concerts and artists"
+    }
+  }
+}

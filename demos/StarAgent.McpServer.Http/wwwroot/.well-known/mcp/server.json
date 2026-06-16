@@ -1,0 +1,9 @@
+{
+  "name": "StarAgent",
+  "description": "AI tour manager for concerts and artists",
+  "url": "http://localhost:3001/mcp",
+  "categories": [
+    "entertainment",
+    "events"
+  ]
+}

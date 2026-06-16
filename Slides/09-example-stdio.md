@@ -18,7 +18,7 @@ builder.Services
 await builder.Build().RunAsync();
 ```
 
-**Tool – `get_chart_position`:**
+**Tools – `get_chart_position` + `book_venue`:**
 ```csharp
 [McpServerToolType]
 public class ChartTools
@@ -30,6 +30,15 @@ public class ChartTools
         [Description("Artist name")] string artist,
         [Description("Chart name")] string chart = "Billboard Hot 100")
         => ChartDataService.Lookup(songTitle, artist, chart);
+
+    [McpServerTool(Name = "book_venue")]
+    [Description("Books a concert venue for an artist on a given date.")]
+    public static BookingResult BookVenue(
+        [Description("Artist name")] string artist,
+        [Description("City")] string city,
+        [Description("Date (yyyy-MM-dd)")] string date,
+        [Description("Required capacity")] int capacity)
+        => VenueService.Book(artist, city, date, capacity);
 }
 ```
 
@@ -76,3 +85,4 @@ public class PressReleasePrompts
 - Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
 - Prompt zeigen: concert_press_release aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley" generieren lassen.
+- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.

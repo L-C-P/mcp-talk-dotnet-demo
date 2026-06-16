@@ -2,15 +2,45 @@
 
 ## Slide text (EN)
 
-### NuGet package
+### Getting started – three options
 
+**Option A: Project template (recommended for new projects)**
+```shell
+# Install the MCP server project template
+dotnet new install Microsoft.McpServer.ProjectTemplates
+
+# Create a new MCP server project
+dotnet new mcpserver -n StarAgent.McpServer
+```
+
+**Option B: Visual Studio**
+- New Project → search for "MCP" → select the MCP Server template
+
+**Option C: Add to an existing project**
 ```shell
 dotnet add package ModelContextProtocol --prerelease
+```
+
+### Register the server in your MCP host (mcp.json)
+
+```json
+{
+  "servers": {
+    "StarAgent": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["run", "--project", "<path-to-project>"]
+    }
+  }
+}
 ```
 
 ### Server-side: attribute-driven registration
 
 ```csharp
+using ModelContextProtocol.Server;
+using System.ComponentModel;
+
 // Mark a class as a Tool container
 [McpServerToolType]
 public class ChartTools

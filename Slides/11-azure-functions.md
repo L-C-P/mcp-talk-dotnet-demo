@@ -4,8 +4,19 @@
 
 ### Hosting an MCP server serverless – Azure Functions (isolated worker)
 
+**NuGet packages:**
+```shell
+dotnet add package ModelContextProtocol --prerelease
+dotnet add package Microsoft.Azure.Functions.Worker
+dotnet add package Microsoft.Azure.Functions.Worker.Extensions.Http
+```
+
 **`Program.cs` – DI registration:**
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ModelContextProtocol.Server;
+
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices(services =>
@@ -22,6 +33,10 @@ await host.RunAsync();
 
 **`McpFunction.cs` – HTTP trigger routes to MCP handler:**
 ```csharp
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.DependencyInjection;
+
 public class McpFunction(IServiceProvider services)
 {
     [Function("mcp")]

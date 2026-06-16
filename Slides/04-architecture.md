@@ -16,19 +16,27 @@
 
 ```mermaid
 flowchart LR
-    subgraph Machine["Your Machine"]
+    subgraph YC["Your Machine"]
         H["Host<br/>(IDE / Agent Shell)"]
         C["MCP Client"]
         S1["MCP Server A<br/>(local · stdio)"]
+        S2["MCP Server B<br/>(local · stdio)"]
+        DS1[("Local<br/>Data Source")]
         H <--> C
-        C <-->|"stdio"| S1
+        C <-->|"JSON-RPC 2.0<br/>(stdio)"| S1
+        C <-->|"JSON-RPC 2.0<br/>(stdio)"| S2
+        S1 <--> DS1
     end
     subgraph Remote["Remote"]
-        S2["MCP Server B<br/>(remote · HTTP)"]
-        EXT[("External<br/>Service / DB")]
-        S2 <--> EXT
+        RS["MCP Server C<br/>(remote · HTTP)"]
     end
-    C <-->|"Streamable HTTP"| S2
+    subgraph Internet["External Systems"]
+        DS2[("Database /<br/>File Store")]
+        RSVC[("Remote<br/>Service / API")]
+    end
+    S2 <-->|"Web APIs"| DS2
+    C <-->|"JSON-RPC 2.0<br/>(Streamable HTTP)"| RS
+    RS <-->|"Web APIs"| RSVC
 ```
 
 > One host can connect to multiple MCP servers simultaneously.
