@@ -638,7 +638,7 @@ layout: codeeditor
 
 ### Bootstrap (`Program.cs`)
 
-```csharp {monaco}  {height:'250px'}
+```csharp {monaco}  {height:'380px'}
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
@@ -672,6 +672,39 @@ await builder.Build().RunAsync();
 - Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
 - Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
 -->
+
+---
+transition: none
+---
+
+```csharp
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly()
+    .WithResourcesFromAssembly()
+    .WithPromptsFromAssembly();
+
+await builder.Build().RunAsync();
+```
+
+---
+---
+
+```csharp {4-8}
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly()
+    .WithResourcesFromAssembly()
+    .WithPromptsFromAssembly();
+
+await builder.Build().RunAsync();
+```
 
 ---
 ---
