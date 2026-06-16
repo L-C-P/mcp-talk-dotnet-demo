@@ -21,7 +21,13 @@ export default {
       return;
     }
 
-    const source = this.src?.startsWith("/")
+    const source = this.src && (
+      this.src.startsWith("/") ||
+      this.src.startsWith("./") ||
+      this.src.startsWith("../") ||
+      this.src.startsWith("http://") ||
+      this.src.startsWith("https://")
+    )
       ? this.src
       : import.meta.env.BASE_URL + this.src;
 

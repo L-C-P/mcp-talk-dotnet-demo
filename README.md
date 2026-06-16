@@ -14,7 +14,7 @@ This repository contains the presentation materials and implementation workspace
 - Presentation entry point: `slidev/dist/index.html`
 - Presentation URL (GitHub Pages): [https://l-c-p.github.io/mcp-talk-dotnet-demo/](https://l-c-p.github.io/mcp-talk-dotnet-demo/)
 
-The default Slidev build in `slidev/package.json` is configured for this URL path (`/mcp-talk-dotnet-demo/`).  
+The default Slidev build in `slidev/package.json` uses a relative base path (`./`) with hash routing so navigation works correctly on GitHub Pages project URLs.  
 Deployment to GitHub Pages runs automatically via `.github/workflows/deploy-pages.yml` on each push to `main`.
 The deck uses hash routing for GitHub Pages compatibility, so direct slide URLs look like `https://l-c-p.github.io/mcp-talk-dotnet-demo/#/1`.
 

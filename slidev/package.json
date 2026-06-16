@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "slidev build --base /mcp-talk-dotnet-demo/ --router-mode hash",
+    "build": "slidev build --base ./ --router-mode hash",
     "build:subdir": "slidev build --base /mcp-talk-dotnet-demo/slidev/dist/ --router-mode hash",
     "dev": "slidev --open",
     "export": "slidev export"
