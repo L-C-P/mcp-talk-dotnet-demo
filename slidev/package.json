@@ -3,8 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "slidev build --base /mcp-talk-dotnet-demo/",
-    "build:subdir": "slidev build --base /mcp-talk-dotnet-demo/slidev/dist/",
+    "build": "slidev build --base /mcp-talk-dotnet-demo/slidev/dist/",
+    "build:root": "slidev build --base /mcp-talk-dotnet-demo/",
     "dev": "slidev --open",
     "export": "slidev export"
   },
