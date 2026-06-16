@@ -16,6 +16,7 @@ transition: slide-left
 duration: 45min
 timer: countdown
 wakeLock: false
+routerMode: hash
 layout: cover
 background: /assets/BLMeetingBackground.png
 ---
@@ -869,7 +870,7 @@ background: /assets/BLMeetingBackground.png
 
 # Thank you!
 
-<img src="./assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
+<img src="/assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
 
 <!--
 - Zeit: 1 min
