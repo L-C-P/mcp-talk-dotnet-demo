@@ -8,7 +8,6 @@
 import type { SharedState } from '@slidev/client'
 import type { IDisposable, editor as MonacoEditorNamespace } from 'monaco-editor'
 import { sharedState, useIsSlideActive, useSlideContext } from '@slidev/client'
-import { patch as patchSharedState } from '@slidev/client/state/shared'
 import { computed, onBeforeUnmount, watch } from 'vue'
 
 interface LiveCodeSyncPayload {
@@ -170,20 +169,33 @@ function canPublishCursorState(editor: StandaloneCodeEditor): boolean {
     return false
   return true
 }
+function touchLocalSharedStateMeta() {
+  syncState.lastUpdate = {
+    id: sourceId,
+    type: $renderContext.value === 'presenter' ? 'presenter' : 'viewer',
+    time: Date.now(),
+  }
+
+  const currentSlideNo = Number.parseInt(slideNo.value, 10)
+  if (Number.isFinite(currentSlideNo))
+    syncState.page = currentSlideNo
+}
 
 function publishCodePayload(payload: LiveCodeSyncPayload) {
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveCodeSync: payload })
     return
   }
-  patchSharedState('liveCodeSync' as never, payload as never)
+  touchLocalSharedStateMeta()
+  syncState.liveCodeSync = payload
 }
 function publishCursorPayload(payload: LiveCursorPayload) {
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveCursorSync: payload })
     return
   }
-  patchSharedState('liveCursorSync' as never, payload as never)
+  touchLocalSharedStateMeta()
+  syncState.liveCursorSync = payload
 }
 
 function clearCursorDecorations(editor: StandaloneCodeEditor) {
