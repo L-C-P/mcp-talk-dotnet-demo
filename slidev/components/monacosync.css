@@ -1,0 +1,21 @@
+.live-host-cursor-selection {
+  background-color: rgb(33 110 199 / 24%);
+}
+
+.live-host-cursor-caret {
+  border-left: 2px solid var(--slidev-theme-primary, #216ec7);
+  margin-left: -1px;
+  pointer-events: none;
+  animation: live-host-cursor-blink 1s step-end infinite;
+}
+
+@keyframes live-host-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

@@ -1,6 +1,7 @@
 ---
 theme: default
 title: "Behind the Scenes: MCP"
+favicon: /favicon.svg
 author: "Denis Sowa"
 colorSchema: light
 themeConfig:
@@ -22,7 +23,7 @@ wakeLock: false
 routerMode: hash
 layout: cover
 class: retro-tv-vcr
-background: /assets/BLMeetingBackground.png
+background: '/assets/BLMeetingBackground.png'
 ---
 
 # Business<br/>Line Meeting
@@ -37,7 +38,7 @@ background: /assets/BLMeetingBackground.png
 ---
 layout: cover
 transition: slide-left
-background: /assets/BLMeetingBackground.png
+background: 'assets/BLMeetingBackground.png'
 ---
 
 # Business<br/>Line Meeting
@@ -69,7 +70,7 @@ The Director Between AI and Enterprise Data
 ---
 layout: section
 transition: slide-left
-background: /assets/SectionBackground.png
+background: '/assets/SectionBackground.png'
 hideInToc: true
 ---
 
@@ -677,7 +678,7 @@ layout: center
 ---
 transition: slide-left
 layout: terminal
-cast: /assets/casts/demo.cast
+cast: '/assets/casts/demo.cast'
 ---
 
 <!--
@@ -686,13 +687,12 @@ cast: /assets/casts/demo.cast
 
 ---
 transition: slide-left
-layout: codeeditor
 ---
-
 # Live Demo: StarAgent MCP Server (stdio)
 
 ### Bootstrap (`Program.cs`)
 
+<MonacoSync />
 ```csharp {monaco}  {height:'380px'}
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -785,7 +785,6 @@ transition: slide-left
 
 ---
 transition: slide-left
-layout: codeeditor
 ---
 
 # HTTP Transport: Reference
@@ -1010,12 +1009,12 @@ transition: slide-left
 transition: slide-up
 hideInToc: true
 layout: cover
-background: /assets/BLMeetingBackground.png
+background: '/assets/BLMeetingBackground.png'
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />
 
-<img src="/assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
+<img src="@/assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
 
 <!--
 - Zeit: 1 min
@@ -1025,5 +1024,5 @@ background: /assets/BLMeetingBackground.png
 ---
 zoom: 1.7
 layout: terminal
-cast: /assets/casts/sw.cast
+cast: '/assets/casts/sw.cast'
 ---

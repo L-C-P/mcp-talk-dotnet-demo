@@ -14,7 +14,11 @@
       "vite/client"
     ],
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "./**/*.ts",

@@ -3,7 +3,7 @@
   font-family: 'Fira Sans';
   src: local('Fira Sans'),
        local('Fira Sans Regular'),
-       url('../assets/fonts/FiraSans-Regular.ttf') format('truetype');
+       url('@/assets/fonts/FiraSans-Regular.ttf') format('truetype');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -12,7 +12,7 @@
 @font-face {
   font-family: 'Fira Sans';
   src: local('Fira Sans SemiBold'),
-       url('../assets/fonts/FiraSans-SemiBold.ttf') format('truetype');
+       url('@/assets/fonts/FiraSans-SemiBold.ttf') format('truetype');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -22,7 +22,7 @@
   font-family: 'Fira Sans';
   src: local('Fira Sans Italic'),
        local('Fira Sans Regular Italic'),
-       url('../assets/fonts/FiraSans-Italic.ttf') format('truetype');
+       url('@/assets/fonts/FiraSans-Italic.ttf') format('truetype');
   font-style: italic;
   font-weight: 400;
   font-display: swap;
@@ -30,7 +30,7 @@
 
 @font-face {
   font-family: 'Fira Sans Condensed';
-  src: url('../assets/fonts/FiraSansCondensed-Bold.ttf') format('truetype');
+  src: url('@/assets/fonts/FiraSansCondensed-Bold.ttf') format('truetype');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -38,7 +38,7 @@
 @font-face {
   font-family: 'Cambria';
   src: local('Cambria'),
-       url('../assets/fonts/Cambria-Regular.ttc') format('truetype-collection');
+       url('@/assets/fonts/Cambria-Regular.ttc') format('truetype-collection');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -47,7 +47,7 @@
 @font-face {
   font-family: 'Cambria';
   src: local('Cambria Bold'),
-       url('../assets/fonts/Cambria-Bold.ttf') format('truetype');
+       url('@/assets/fonts/Cambria-Bold.ttf') format('truetype');
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -56,7 +56,7 @@
 @font-face {
   font-family: 'Cambria';
   src: local('Cambria Italic'),
-       url('../assets/fonts/Cambria-Italic.ttf') format('truetype');
+       url('@/assets/fonts/Cambria-Italic.ttf') format('truetype');
   font-style: italic;
   font-weight: 400;
   font-display: swap;
@@ -65,7 +65,7 @@
 @font-face {
   font-family: 'Cambria';
   src: local('Cambria Bold Italic'),
-       url('../assets/fonts/Cambria-BoldItalic.ttf') format('truetype');
+       url('@/assets/fonts/Cambria-BoldItalic.ttf') format('truetype');
   font-style: italic;
   font-weight: 700;
   font-display: swap;
@@ -73,7 +73,7 @@
 
 @font-face {
   font-family: "Hack Nerd Font";
-  src: url("../assets/fonts/HackNerdFontComplete-Regular.ttf") format("truetype");
+  src: url("@/assets/fonts/HackNerdFontComplete-Regular.ttf") format("truetype");
 }
 
 .slidev-layout {
@@ -181,7 +181,7 @@
 }
 
 .slidev-layout.toc {
-  background: url('../assets/ContentBackground.png') center center / cover no-repeat !important;
+  background: url('@/assets/ContentBackground.png') center center / cover no-repeat !important;
 }
 
 .slidev-layout.toc h1 {
