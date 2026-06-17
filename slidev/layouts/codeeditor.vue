@@ -8,6 +8,7 @@
 import type { SharedState } from '@slidev/client'
 import type { IDisposable, editor as MonacoEditorNamespace } from 'monaco-editor'
 import { sharedState, useIsSlideActive, useSlideContext } from '@slidev/client'
+import { patch as patchSharedState } from '@slidev/client/state/shared'
 import { computed, onBeforeUnmount, watch } from 'vue'
 
 interface LiveCodeSyncPayload {
@@ -175,14 +176,14 @@ function publishCodePayload(payload: LiveCodeSyncPayload) {
     void syncState.$patch({ liveCodeSync: payload })
     return
   }
-  syncState.liveCodeSync = payload
+  patchSharedState('liveCodeSync' as never, payload as never)
 }
 function publishCursorPayload(payload: LiveCursorPayload) {
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveCursorSync: payload })
     return
   }
-  syncState.liveCursorSync = payload
+  patchSharedState('liveCursorSync' as never, payload as never)
 }
 
 function clearCursorDecorations(editor: StandaloneCodeEditor) {
