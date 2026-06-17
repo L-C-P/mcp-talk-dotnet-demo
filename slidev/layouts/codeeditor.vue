@@ -33,10 +33,18 @@ interface LiveCursorPayload {
   cursor: { lineNumber: number, column: number } | null
   selection: LiveCursorRange | null
 }
+interface LiveScrollPayload {
+  editorKey: string
+  sourceId: string
+  version: number
+  scrollTop: number
+  scrollLeft: number
+}
 
 type SharedStateWithLiveCode = SharedState & {
   liveCodeSync?: LiveCodeSyncPayload
   liveCursorSync?: LiveCursorPayload
+  liveScrollSync?: LiveScrollPayload
   $patch?: (patch: Partial<SharedStateWithLiveCode>) => Promise<boolean>
 }
 
@@ -46,6 +54,7 @@ type EditorSubscriptions = {
   onChange: IDisposable
   onCursorPosition: IDisposable
   onCursorSelection: IDisposable
+  onScroll: IDisposable
   onFocus: IDisposable
   onBlur: IDisposable
   onDispose: IDisposable
@@ -64,6 +73,7 @@ const syncEnabled = computed(() => isMainRenderContext.value && isSlideActive.va
 
 let codeVersionCounter = 0
 let cursorVersionCounter = 0
+let scrollVersionCounter = 0
 let monaco: typeof import('monaco-editor') | null = null
 let createEditorListener: IDisposable | null = null
 let syncRunning = false
@@ -72,12 +82,16 @@ const trackedEditors = new Map<string, StandaloneCodeEditor>()
 const editorSubscriptions = new Map<string, EditorSubscriptions>()
 const publishTimers = new Map<string, ReturnType<typeof setTimeout>>()
 const cursorPublishTimers = new Map<string, ReturnType<typeof setTimeout>>()
+const scrollPublishTimers = new Map<string, ReturnType<typeof setTimeout>>()
 const applyingRemoteByEditorId = new Set<string>()
+const applyingRemoteScrollByEditorId = new Set<string>()
 
 const latestRemoteVersionByEditorKey = new Map<string, number>()
 const cachedPayloadByEditorKey = new Map<string, LiveCodeSyncPayload>()
 const latestRemoteCursorVersionByEditorKey = new Map<string, number>()
 const cachedCursorPayloadByEditorKey = new Map<string, LiveCursorPayload>()
+const latestRemoteScrollVersionByEditorKey = new Map<string, number>()
+const cachedScrollPayloadByEditorKey = new Map<string, LiveScrollPayload>()
 const cursorDecorationIdsByEditorId = new Map<string, string[]>()
 
 function isStandaloneCodeEditor(editor: CodeEditor): editor is StandaloneCodeEditor {
@@ -126,6 +140,11 @@ function nextCursorVersion() {
   return cursorVersionCounter
 }
 
+function nextScrollVersion() {
+  scrollVersionCounter += 1
+  return scrollVersionCounter
+}
+
 function getEditorKey(editor: StandaloneCodeEditor): string | null {
   if (!isConnectedEditor(editor))
     return null
@@ -169,6 +188,15 @@ function canPublishCursorState(editor: StandaloneCodeEditor): boolean {
     return false
   return true
 }
+function canPublishScrollState(editor: StandaloneCodeEditor): boolean {
+  if ($renderContext.value !== 'presenter')
+    return false
+  if (!isConnectedEditor(editor))
+    return false
+  if (!isEditorInPresenterMainPane(editor))
+    return false
+  return true
+}
 function touchLocalSharedStateMeta() {
   syncState.lastUpdate = {
     id: sourceId,
@@ -196,6 +224,14 @@ function publishCursorPayload(payload: LiveCursorPayload) {
   }
   touchLocalSharedStateMeta()
   syncState.liveCursorSync = payload
+}
+function publishScrollPayload(payload: LiveScrollPayload) {
+  if (typeof syncState.$patch === 'function') {
+    void syncState.$patch({ liveScrollSync: payload })
+    return
+  }
+  touchLocalSharedStateMeta()
+  syncState.liveScrollSync = payload
 }
 
 function clearCursorDecorations(editor: StandaloneCodeEditor) {
@@ -254,6 +290,39 @@ function publishEditorCursorState(editor: StandaloneCodeEditor, visibleOverride?
 
   cursorPublishTimers.set(editorId, timer)
 }
+function publishEditorScrollState(editor: StandaloneCodeEditor, immediate = false) {
+  if (!syncEnabled.value)
+    return
+  if (!canPublishScrollState(editor))
+    return
+
+  const editorId = editor.getId()
+  if (applyingRemoteScrollByEditorId.has(editorId))
+    return
+
+  const editorKey = getEditorKey(editor)
+  if (!isEditorFromCurrentSlide(editorKey))
+    return
+
+  const existingTimer = scrollPublishTimers.get(editorId)
+  if (existingTimer)
+    clearTimeout(existingTimer)
+
+  const delay = immediate ? 0 : 30
+  const timer = setTimeout(() => {
+    scrollPublishTimers.delete(editorId)
+    const payload: LiveScrollPayload = {
+      editorKey,
+      sourceId,
+      version: nextScrollVersion(),
+      scrollTop: editor.getScrollTop(),
+      scrollLeft: editor.getScrollLeft(),
+    }
+    publishScrollPayload(payload)
+  }, delay)
+
+  scrollPublishTimers.set(editorId, timer)
+}
 function reapplyCachedCursorForEditor(editor: StandaloneCodeEditor) {
   const editorKey = getEditorKey(editor)
   if (!isEditorFromCurrentSlide(editorKey))
@@ -262,6 +331,15 @@ function reapplyCachedCursorForEditor(editor: StandaloneCodeEditor) {
   const cursorPayload = cachedCursorPayloadByEditorKey.get(editorKey)
   if (cursorPayload)
     applyCursorPayloadToEditor(editor, cursorPayload)
+}
+function reapplyCachedScrollForEditor(editor: StandaloneCodeEditor) {
+  const editorKey = getEditorKey(editor)
+  if (!isEditorFromCurrentSlide(editorKey))
+    return
+
+  const scrollPayload = cachedScrollPayloadByEditorKey.get(editorKey)
+  if (scrollPayload)
+    applyScrollPayloadToEditor(editor, scrollPayload)
 }
 
 function applyPayloadToEditor(editor: StandaloneCodeEditor, payload: LiveCodeSyncPayload) {
@@ -287,8 +365,10 @@ function applyPayloadToEditor(editor: StandaloneCodeEditor, payload: LiveCodeSyn
   }
   finally {
     applyingRemoteByEditorId.delete(editorId)
-    if (didUpdateContent)
+    if (didUpdateContent) {
       reapplyCachedCursorForEditor(editor)
+      reapplyCachedScrollForEditor(editor)
+    }
   }
 }
 
@@ -354,6 +434,30 @@ function applyCursorPayloadToEditor(editor: StandaloneCodeEditor, payload: LiveC
   const currentDecorationIds = cursorDecorationIdsByEditorId.get(editorId) ?? []
   const nextDecorationIds = editor.deltaDecorations(currentDecorationIds, decorations)
   cursorDecorationIdsByEditorId.set(editorId, nextDecorationIds)
+}
+function applyScrollPayloadToEditor(editor: StandaloneCodeEditor, payload: LiveScrollPayload) {
+  if (!isConnectedEditor(editor))
+    return
+  if (!isEditorInPresenterMainPane(editor))
+    return
+
+  const currentScrollTop = editor.getScrollTop()
+  const currentScrollLeft = editor.getScrollLeft()
+  if (currentScrollTop === payload.scrollTop && currentScrollLeft === payload.scrollLeft)
+    return
+
+  const editorId = editor.getId()
+  applyingRemoteScrollByEditorId.add(editorId)
+  try {
+    editor.setScrollTop(payload.scrollTop)
+    editor.setScrollLeft(payload.scrollLeft)
+  }
+  catch {
+    // Ignore transient editor lifecycle errors during slide transitions.
+  }
+  finally {
+    applyingRemoteScrollByEditorId.delete(editorId)
+  }
 }
 
 function applyPayloadToMatchingEditors(payload: LiveCodeSyncPayload) {
@@ -433,6 +537,45 @@ function applyCursorPayloadToMatchingEditors(payload: LiveCursorPayload) {
   if (currentSlideEditors.length === 1)
     applyCursorPayloadToEditor(currentSlideEditors[0].editor, payload)
 }
+function applyScrollPayloadToMatchingEditors(payload: LiveScrollPayload) {
+  if (!monaco)
+    return
+
+  const payloadSlideNo = getSlideNoFromEditorKey(payload.editorKey)
+  if (payloadSlideNo !== slideNo.value)
+    return
+
+  const payloadEditorIndex = getEditorIndexFromEditorKey(payload.editorKey)
+  const standaloneEditors = monaco.editor.getEditors().filter(isStandaloneCodeEditor)
+  const currentSlideEditors: { editor: StandaloneCodeEditor, editorKey: string }[] = []
+  for (const editor of standaloneEditors) {
+    const editorKey = getEditorKey(editor)
+    if (!isEditorFromCurrentSlide(editorKey))
+      continue
+    currentSlideEditors.push({ editor, editorKey })
+  }
+
+  const exactMatches = currentSlideEditors
+    .filter(({ editorKey }) => editorKey === payload.editorKey)
+    .map(({ editor }) => editor)
+  const exactMatch = pickPreferredEditor(exactMatches)
+  if (exactMatch) {
+    applyScrollPayloadToEditor(exactMatch, payload)
+    return
+  }
+
+  const indexMatches = currentSlideEditors
+    .filter(({ editorKey }) => getEditorIndexFromEditorKey(editorKey) === payloadEditorIndex)
+    .map(({ editor }) => editor)
+  const indexMatch = pickPreferredEditor(indexMatches)
+  if (indexMatch) {
+    applyScrollPayloadToEditor(indexMatch, payload)
+    return
+  }
+
+  if (currentSlideEditors.length === 1)
+    applyScrollPayloadToEditor(currentSlideEditors[0].editor, payload)
+}
 
 function canPublishEditorChanges(editor: StandaloneCodeEditor): boolean {
   if (!isConnectedEditor(editor))
@@ -484,6 +627,7 @@ function untrackEditor(editorId: string) {
   subscriptions?.onChange.dispose()
   subscriptions?.onCursorPosition.dispose()
   subscriptions?.onCursorSelection.dispose()
+  subscriptions?.onScroll.dispose()
   subscriptions?.onFocus.dispose()
   subscriptions?.onBlur.dispose()
   subscriptions?.onDispose.dispose()
@@ -499,7 +643,13 @@ function untrackEditor(editorId: string) {
   if (cursorTimer)
     clearTimeout(cursorTimer)
   cursorPublishTimers.delete(editorId)
+
+  const scrollTimer = scrollPublishTimers.get(editorId)
+  if (scrollTimer)
+    clearTimeout(scrollTimer)
+  scrollPublishTimers.delete(editorId)
   applyingRemoteByEditorId.delete(editorId)
+  applyingRemoteScrollByEditorId.delete(editorId)
   cursorDecorationIdsByEditorId.delete(editorId)
 }
 
@@ -521,10 +671,11 @@ function trackEditor(editor: StandaloneCodeEditor) {
   const onChange = editor.onDidChangeModelContent(() => publishEditorChanges(editor))
   const onCursorPosition = editor.onDidChangeCursorPosition(() => publishEditorCursorState(editor))
   const onCursorSelection = editor.onDidChangeCursorSelection(() => publishEditorCursorState(editor))
+  const onScroll = editor.onDidScrollChange(() => publishEditorScrollState(editor))
   const onFocus = editor.onDidFocusEditorText(() => publishEditorCursorState(editor, true, true))
   const onBlur = editor.onDidBlurEditorText(() => publishEditorCursorState(editor, false, true))
   const onDispose = editor.onDidDispose(() => untrackEditor(editorId))
-  editorSubscriptions.set(editorId, { onChange, onCursorPosition, onCursorSelection, onFocus, onBlur, onDispose })
+  editorSubscriptions.set(editorId, { onChange, onCursorPosition, onCursorSelection, onScroll, onFocus, onBlur, onDispose })
 
   const payload = cachedPayloadByEditorKey.get(editorKey)
   if (payload)
@@ -533,6 +684,10 @@ function trackEditor(editor: StandaloneCodeEditor) {
   const cursorPayload = cachedCursorPayloadByEditorKey.get(editorKey)
   if (cursorPayload)
     applyCursorPayloadToEditor(editor, cursorPayload)
+
+  const scrollPayload = cachedScrollPayloadByEditorKey.get(editorKey)
+  if (scrollPayload)
+    applyScrollPayloadToEditor(editor, scrollPayload)
 }
 
 function handleRemotePayload(payload?: LiveCodeSyncPayload) {
@@ -570,6 +725,24 @@ function handleRemoteCursorPayload(payload?: LiveCursorPayload) {
 
   if (syncEnabled.value)
     applyCursorPayloadToMatchingEditors(payload)
+}
+function handleRemoteScrollPayload(payload?: LiveScrollPayload) {
+  if (!payload)
+    return
+  if (payload.sourceId === sourceId)
+    return
+  if (getSlideNoFromEditorKey(payload.editorKey) !== slideNo.value)
+    return
+
+  const knownVersion = latestRemoteScrollVersionByEditorKey.get(payload.editorKey) ?? 0
+  if (payload.version <= knownVersion)
+    return
+
+  latestRemoteScrollVersionByEditorKey.set(payload.editorKey, payload.version)
+  cachedScrollPayloadByEditorKey.set(payload.editorKey, payload)
+
+  if (syncEnabled.value)
+    applyScrollPayloadToMatchingEditors(payload)
 }
 
 function stopSync() {
@@ -614,6 +787,11 @@ const stopWatchingCursorPayload = watch(
   payload => handleRemoteCursorPayload(payload),
   { immediate: true, deep: true },
 )
+const stopWatchingScrollPayload = watch(
+  () => syncState.liveScrollSync,
+  payload => handleRemoteScrollPayload(payload),
+  { immediate: true, deep: true },
+)
 
 const stopWatchingSyncEnabled = watch(
   syncEnabled,
@@ -629,6 +807,7 @@ const stopWatchingSyncEnabled = watch(
 onBeforeUnmount(() => {
   stopWatchingPayload()
   stopWatchingCursorPayload()
+  stopWatchingScrollPayload()
   stopWatchingSyncEnabled()
   stopSync()
 })

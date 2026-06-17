@@ -12,12 +12,28 @@ info: |
     Business Line Meeting · "The Show must go on!" · 45 min · EN slides / DE spoken
 drawings:
     persist: false
-transition: slide-left
+transition: fade
 duration: 45min
 timer: countdown
 wakeLock: false
 routerMode: hash
 layout: cover
+class: retro-tv-vcr
+background: /assets/BLMeetingBackground.png
+---
+
+# Business<br/>Line Meeting
+
+*The show must go on.*<br/>
+*Oberhausen. 2026.*
+
+<!--
+- Zeit: 0 min
+-->
+
+---
+layout: cover
+transition: slide-left
 background: /assets/BLMeetingBackground.png
 ---
 
@@ -32,6 +48,7 @@ background: /assets/BLMeetingBackground.png
 
 ---
 layout: intro
+transition: slide-left
 hideInToc: true
 ---
 
@@ -48,6 +65,7 @@ The Director Between AI and Enterprise Data
 
 ---
 layout: section
+transition: slide-left
 background: /assets/SectionBackground.png
 hideInToc: true
 ---
@@ -63,6 +81,7 @@ BL Microsoft, Hannover
 
 ---
 layout: center
+transition: slide-left
 class: toc
 hideInToc: true
 ---
@@ -106,6 +125,7 @@ transition: slide-up
 -->
 
 ---
+transition: slide-left
 zoom: 0.95
 ---
 
@@ -129,6 +149,7 @@ zoom: 0.95
 -->
 
 ---
+transition: slide-left
 ---
 
 # What Is MCP?
@@ -195,6 +216,7 @@ flowchart LR
 -->
 
 ---
+transition: slide-left
 hideInToc: true
 ---
 
@@ -246,6 +268,7 @@ transition: slide-up
 -->
 
 ---
+transition: slide-left
 hideInToc: true
 ---
 
@@ -440,6 +463,7 @@ transition: slide-up
 -->
 
 ---
+transition: slide-left
 hideInToc: true
 ---
 
@@ -502,6 +526,7 @@ sequenceDiagram
 -->
 
 ---
+transition: slide-left
 hideInToc: true
 ---
 
@@ -520,6 +545,7 @@ hideInToc: true
 -->
 
 ---
+transition: slide-left
 ---
 
 # Microsoft MCP SDK for .NET
@@ -549,6 +575,7 @@ dotnet add package ModelContextProtocol
 -->
 
 ---
+transition: slide-left
 ---
 
 # Register the server in your MCP host (`mcp.json`)
@@ -577,6 +604,7 @@ dotnet add package ModelContextProtocol
 -->
 
 ---
+transition: slide-left
 hideInToc: true
 ---
 
@@ -613,6 +641,7 @@ public class ChartTools
 -->
 
 ---
+transition: slide-left
 ---
 
 # Host-side: discover and invoke
@@ -631,6 +660,29 @@ var result = await client.CallToolAsync("get_chart_position",
 -->
 
 ---
+transition: slide-left
+layout: center
+---
+
+# DEMO
+
+<!--
+- Zeit: 0,5 min
+- **Überleitung:** Wir erstellen das Projekt
+-->
+
+---
+transition: slide-left
+layout: terminal
+cast: /assets/casts/demo.cast
+---
+
+<!--
+- Zeit: 1 min
+-->
+
+---
+transition: slide-left
 layout: codeeditor
 ---
 
@@ -691,6 +743,7 @@ await builder.Build().RunAsync();
 ```
 
 ---
+transition: slide-left
 ---
 
 ```csharp {4-8}
@@ -707,6 +760,7 @@ await builder.Build().RunAsync();
 ```
 
 ---
+transition: slide-left
 ---
 
 ### Demo capabilities
@@ -727,6 +781,7 @@ await builder.Build().RunAsync();
 -->
 
 ---
+transition: slide-left
 layout: codeeditor
 ---
 
@@ -797,6 +852,8 @@ await app.RunAsync("http://localhost:3001");
 -->
 
 ---
+transition: slide-left
+---
 
 # MCP on Azure Functions
 
@@ -842,6 +899,7 @@ await host.RunAsync();
 -->
 
 ---
+transition: slide-left
 zoom: 0.95
 ---
 
@@ -884,6 +942,8 @@ zoom: 0.95
 -->
 
 ---
+transition: slide-left
+---
 
 # Discovery models in parallel
 
@@ -900,6 +960,8 @@ flowchart LR
 - Praxishinweis: Wer heute einen MCP-Server baut, sollte `/.well-known/mcp.json` schon vorsehen – der Aufwand ist minimal, der Zukunftswert groß.
 -->
 
+---
+transition: slide-left
 ---
 
 # Key Takeaways
@@ -922,6 +984,8 @@ flowchart LR
 -->
 
 ---
+transition: slide-left
+---
 
 # Where to go next
 
@@ -940,6 +1004,7 @@ flowchart LR
 -->
 
 ---
+transition: slide-up
 hideInToc: true
 layout: cover
 background: /assets/BLMeetingBackground.png
@@ -955,18 +1020,7 @@ background: /assets/BLMeetingBackground.png
 -->
 
 ---
+zoom: 1.7
 layout: terminal
 cast: /assets/casts/sw.cast
----
-
----
-layout: center
-hideInToc: true
----
-
-# DEMO
-
----
-layout: terminal
-cast: /assets/casts/demo.cast
 ---
