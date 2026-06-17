@@ -1,10 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,600;1,400&family=Fira+Sans+Condensed:wght@700&display=swap');
 @import '../styles/retro-tv.css';
+@font-face {
+  font-family: 'Fira Sans';
+  src: local('Fira Sans'),
+       local('Fira Sans Regular'),
+       url('../assets/fonts/FiraSans-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: local('Fira Sans SemiBold'),
+       url('../assets/fonts/FiraSans-SemiBold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: local('Fira Sans Italic'),
+       local('Fira Sans Regular Italic'),
+       url('../assets/fonts/FiraSans-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fira Sans Condensed';
+  src: url('../assets/fonts/FiraSansCondensed-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cambria';
+  src: local('Cambria'),
+       url('../assets/fonts/Cambria-Regular.ttc') format('truetype-collection');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cambria';
+  src: local('Cambria Bold'),
+       url('../assets/fonts/Cambria-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cambria';
+  src: local('Cambria Italic'),
+       url('../assets/fonts/Cambria-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cambria';
+  src: local('Cambria Bold Italic'),
+       url('../assets/fonts/Cambria-BoldItalic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
 
 @font-face {
   font-family: "Hack Nerd Font";
-  src: local(Hack Nerd Font Mono),
-  url("../assets/HackNerdFontComplete-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/HackNerdFontComplete-Regular.ttf") format("truetype");
 }
 
 .slidev-layout {
@@ -50,10 +119,6 @@
 
 .slidev-layout :is(table, th, td) {
   border-color: var(--color-primary, #216ec7);
-}
-
-.slidev-layout.cover {
-  background: var(--color-black, #000);
 }
 
 .slidev-layout.cover h1 {

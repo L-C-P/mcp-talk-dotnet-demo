@@ -13,6 +13,7 @@
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "asciinema-player": "^3.15.1",
+    "slidev-addon-animated-text": "^0.4.0",
     "vue": "^3.5.33"
   }
 }

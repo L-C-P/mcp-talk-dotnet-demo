@@ -12,6 +12,9 @@ info: |
     Business Line Meeting · "The Show must go on!" · 45 min · EN slides / DE spoken
 drawings:
     persist: false
+    presenterOnly: true
+addons:
+    - slidev-addon-animated-text
 transition: fade
 duration: 45min
 timer: countdown
@@ -88,7 +91,7 @@ hideInToc: true
 
 # *Today's Setlist*
 
-<Toc :columns="2" />
+<Toc :columns="2" :maxDepth="1" />
 
 <!--
 - Zeit: 1 min
@@ -1010,7 +1013,7 @@ layout: cover
 background: /assets/BLMeetingBackground.png
 ---
 
-# Thank you!
+<animated-text text-8xl text-primary text="Thank you!" />
 
 <img src="/assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
 
