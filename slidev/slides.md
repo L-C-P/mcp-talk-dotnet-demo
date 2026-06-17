@@ -62,7 +62,7 @@ The Director Between AI and Enterprise Data
 <!--
 - Zeit: 2 min
 - Kurz die Energie des Event-Themas aufgreifen: Heute sind wir alle Stars – und **StarAgent** managed die Tour.
-- Erwartung setzen: Kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
+- Erwartung setzen: kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
 - Ziel benennen: Jede Person hier soll danach in der Lage sein, den Kommunikationsfluss zwischen LLM und MCP zu erklären – und wissen, wie sie selbst einen Server bauen kann.
 -->
 
@@ -148,7 +148,7 @@ zoom: 0.95
 <!--
 - Zeit: 1 min
 - Hinweis: Die Verzeichnis-URLs sind später auf der Folie "Where to go next" aufgeführt.
-- **Überleitung:** Was genau ist dieses Protokoll?
+- **Überleitung:** was genau ist dieses Protokoll?
 -->
 
 ---
@@ -671,7 +671,7 @@ layout: center
 
 <!--
 - Zeit: 0,5 min
-- **Überleitung:** Wir erstellen das Projekt
+- **Überleitung:** wir erstellen das Projekt
 -->
 
 ---
@@ -851,7 +851,7 @@ await app.RunAsync("http://localhost:3001");
 - `Stateless = true` passt perfekt zu serverless-Deployments wie Azure Functions (kommt gleich).
 - `app.MapMcp()` registriert den `/mcp`-Endpunkt – analog zu `app.MapControllers()` oder `app.MapHub()`.
 - Auth-Hinweis: Bei HTTP-Transport ist Authentifizierung Pflicht in Produktion. Typisch: Azure AD, API-Keys oder OAuth.
-- Sampling erklären: Sampling ist der umgekehrte Weg – normalerweise ruft der Host/Client den Server auf. Beim Sampling dreht der Server den Spieß um und bittet seinerseits den Host, das LLM mit einer bestimmten Anfrage aufzurufen und das Ergebnis zurückzugeben. Beispiel: Ein Tool läuft, merkt dass es zusätzlichen Kontext vom Modell braucht, und löst über den Host eine neue LLM-Anfrage aus – ohne dass der Nutzer direkt eingreifen muss. Das funktioniert nur mit einer persistenten Verbindung (stdio oder HTTP stateful).
+- Sampling erklären: Sampling ist der umgekehrte Weg – normalerweise ruft der Host/Client den Server auf. Beim Sampling dreht der Server den Spieß um und bittet seinerseits den Host, das LLM mit einer bestimmten Anfrage aufzurufen und das Ergebnis zurückzugeben. Beispiel: Ein Tool läuft und merkt, dass es zusätzlichen Kontext vom Modell braucht, und löst über den Host eine neue LLM-Anfrage aus – ohne dass der Nutzer direkt eingreifen muss. Das funktioniert nur mit einer persistenten Verbindung (stdio oder HTTP stateful).
 -->
 
 ---
@@ -983,7 +983,7 @@ transition: slide-left
 - Zeit: 2 min
 - Kernbotschaften nochmal kurz zusammenfassen – nicht vorlesen, sondern in eigenen Worten.
 - Wichtigste Botschaft für Entwickelnde: Es ist weniger Aufwand als gedacht. Attribute drauf, DI fertig, Server läuft.
-- Wichtigste Botschaft für Nicht-Entwickelnde: MCP schafft eine klare, auditierbare Grenze zwischen dem LLM und euren Systemen. Das ist gut für Governance und Sicherheit.
+- Wichtigste Botschaft für Nichtentwickelnde: MCP schafft eine klare, auditierbare Grenze zwischen dem LLM und euren Systemen. Das ist gut für Governance und Sicherheit.
 -->
 
 ---

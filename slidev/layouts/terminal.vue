@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed, PropType} from 'vue'
 import {resolveAssetUrl} from "../layoutHelper";
+import Asciinema from "../components/Asciinema.vue";
 
 const props = defineProps({
   cast: {
