@@ -3,7 +3,6 @@ theme: default
 title: "Behind the Scenes: MCP"
 favicon: /favicon.svg
 author: "Denis Sowa"
-audience: live
 colorSchema: light
 themeConfig:
     primary: '#216ec7'
