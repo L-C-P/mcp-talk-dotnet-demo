@@ -376,6 +376,7 @@ hideFor: live
 zoom: 0.85
 transition: slide-up
 hideFor: live
+hideInToc: true
 ---
 
 # It's just text – structured text
@@ -418,6 +419,7 @@ hideFor: live
 ---
 transition: slide-up
 hideFor: live
+hideInToc: true
 ---
 
 # It's just text – structured text
@@ -442,6 +444,7 @@ hideFor: live
 ---
 transition: slide-up
 hideFor: live
+hideInToc: true
 ---
 
 # It's just text – structured text
@@ -471,6 +474,7 @@ hideFor: live
 ---
 transition: slide-left
 hideFor: live
+hideInToc: true
 ---
 
 # It's just text – structured text
@@ -534,6 +538,7 @@ sequenceDiagram
 ---
 transition: slide-left
 hideFor: live
+hideInToc: true
 ---
 
 # Discovery & Runtime Sequence
