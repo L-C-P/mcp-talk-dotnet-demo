@@ -3,6 +3,7 @@ theme: default
 title: "Behind the Scenes: MCP"
 favicon: /favicon.svg
 author: "Denis Sowa"
+audience: live
 colorSchema: light
 themeConfig:
     primary: '#216ec7'
@@ -22,6 +23,7 @@ timer: countdown
 wakeLock: false
 routerMode: hash
 layout: cover
+hideInToc: true
 class: retro-tv-vcr
 background: '/assets/BLMeetingBackground.png'
 ---
@@ -37,6 +39,7 @@ background: '/assets/BLMeetingBackground.png'
 
 ---
 layout: cover
+hideInToc: true
 transition: slide-left
 background: 'assets/BLMeetingBackground.png'
 ---
@@ -321,9 +324,9 @@ One server works with every MCP-compatible host – the host handles the transla
 -->
 
 ---
-hideInToc: true
 zoom: 0.75
 transition: slide-up
+hideFor: live
 ---
 
 # It's just text – structured text
@@ -371,9 +374,9 @@ transition: slide-up
 -->
 
 ---
-hideInToc: true
 zoom: 0.85
 transition: slide-up
+hideFor: live
 ---
 
 # It's just text – structured text
@@ -414,8 +417,8 @@ transition: slide-up
 -->
 
 ---
-hideInToc: true
 transition: slide-up
+hideFor: live
 ---
 
 # It's just text – structured text
@@ -438,8 +441,8 @@ transition: slide-up
 -->
 
 ---
-hideInToc: true
 transition: slide-up
+hideFor: live
 ---
 
 # It's just text – structured text
@@ -468,7 +471,7 @@ transition: slide-up
 
 ---
 transition: slide-left
-hideInToc: true
+hideFor: live
 ---
 
 # It's just text – structured text
@@ -497,7 +500,7 @@ hideInToc: true
 
 ---
 transition: slide-up
-hideInToc: true
+hideFor: live
 ---
 
 # Discovery & Runtime Sequence
@@ -531,7 +534,7 @@ sequenceDiagram
 
 ---
 transition: slide-left
-hideInToc: true
+hideFor: live
 ---
 
 # Discovery & Runtime Sequence
@@ -609,7 +612,6 @@ transition: slide-left
 
 ---
 transition: slide-left
-hideInToc: true
 ---
 
 # Microsoft MCP SDK for .NET
@@ -676,6 +678,7 @@ layout: center
 -->
 
 ---
+title: INSTALL TEST
 transition: slide-left
 layout: terminal
 cast: '/assets/casts/demo.cast'
@@ -688,6 +691,7 @@ cast: '/assets/casts/demo.cast'
 ---
 transition: slide-left
 ---
+
 # Live Demo: StarAgent MCP Server (stdio)
 
 ### Bootstrap (`Program.cs`)
@@ -697,13 +701,14 @@ transition: slide-left
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithResourcesFromAssembly()
-    .WithPromptsFromAssembly();
+.AddMcpServer()
+.WithStdioServerTransport()
+.WithToolsFromAssembly()
+.WithResourcesFromAssembly()
+.WithPromptsFromAssembly();
 
 await builder.Build().RunAsync();
+
 ```
 
 <!--
@@ -1014,7 +1019,7 @@ background: '/assets/BLMeetingBackground.png'
 
 <animated-text text-8xl text-primary text="Thank you!" />
 
-<img src="@/assets/QR.png" alt="QR code" class="absolute right-16 top-16 w-40">
+<img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-40">
 
 <!--
 - Zeit: 1 min
@@ -1025,4 +1030,5 @@ background: '/assets/BLMeetingBackground.png'
 zoom: 1.7
 layout: terminal
 cast: '/assets/casts/sw.cast'
+hideFor: live
 ---
