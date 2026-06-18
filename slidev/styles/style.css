@@ -181,7 +181,7 @@
 }
 
 .slidev-layout.toc {
-  background: url('@/assets/ContentBackground.png') center center / cover no-repeat !important;
+  background: url('/assets/ContentBackground.png') center center / cover no-repeat !important;
 }
 
 .slidev-layout.toc h1 {
