@@ -3,9 +3,10 @@ theme: default
 title: "Behind the Scenes: MCP"
 favicon: /favicon.svg
 author: "Denis Sowa"
+audience: all
 colorSchema: light
 themeConfig:
-    primary: '#216ec7'
+    primary: "#216ec7"
 fonts:
     sans: Fira Sans
     serif: Cambria
@@ -15,42 +16,38 @@ drawings:
     persist: false
     presenterOnly: true
 addons:
+    - slidev-addon-timing-bar
     - slidev-addon-animated-text
 transition: fade
-duration: 45min
+duration: 60min
 timer: countdown
 wakeLock: false
 routerMode: hash
 layout: cover
 hideInToc: true
 class: retro-tv-vcr
-background: '/assets/BLMeetingBackground.png'
+background: "/assets/BLMeetingBackground.png"
+section:
+    title: Welcome
+    duration: 3m
 ---
 
 # Business<br/>Line Meeting
 
-*The show must go on.*<br/>
-*Oberhausen. 2026.*
-
-<!--
-- Zeit: 0 min
--->
+_The show must go on.<br/>
+Oberhausen. 2026._
 
 ---
 layout: cover
 hideInToc: true
 transition: slide-left
-background: 'assets/BLMeetingBackground.png'
+background: "assets/BLMeetingBackground.png"
 ---
 
 # Business<br/>Line Meeting
 
-*The show must go on.*<br/>
-*Oberhausen. 2026.*
-
-<!--
-- Zeit: 0 min
--->
+_The show must go on.<br/>
+Oberhausen. 2026._
 
 ---
 layout: intro
@@ -63,7 +60,7 @@ hideInToc: true
 The Director Between AI and Enterprise Data
 
 <!--
-- Zeit: 2 min
+- Zeit: 2m
 - Kurz die Energie des Event-Themas aufgreifen: Heute sind wir alle Stars – und **StarAgent** managed die Tour.
 - Erwartung setzen: kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
 - Ziel benennen: Jede Person hier soll danach in der Lage sein, den Kommunikationsfluss zwischen LLM und MCP zu erklären – und wissen, wie sie selbst einen Server bauen kann.
@@ -72,7 +69,7 @@ The Director Between AI and Enterprise Data
 ---
 layout: section
 transition: slide-left
-background: '/assets/SectionBackground.png'
+background: "/assets/SectionBackground.png"
 hideInToc: true
 ---
 
@@ -82,7 +79,7 @@ Architect, AI-Ambassador<br/>
 BL Microsoft, Hannover
 
 <!--
-- Zeit: 0,5 min
+- Zeit: 30s
 -->
 
 ---
@@ -92,21 +89,22 @@ class: toc
 hideInToc: true
 ---
 
-# *Today's Setlist*
+# _Today's Setlist_
 
 <Toc :columns="2" :maxDepth="1" />
 
 <!--
-- Zeit: 1 min
+- Zeit: 30s
 - Die Präsentation gliedert sich in drei Teile:
   - Was ist "MCP"
   - Wie funktioniert "MCP"
   - Wir implementieren "MCP"
-- Es gibt Folien zur Verteifung, die wir überspringen.
+- Auf GitHub gibt es zusätzliche Folien zur Verteifung.
 -->
 
 ---
 transition: slide-up
+section: { title: Why We Needed MCP, duration: 15m }
 ---
 
 # Why We Needed MCP
@@ -179,7 +177,79 @@ transition: slide-left
 -->
 
 ---
+transition: fade
+---
+
+# MCP Architecture
+
+```mermaid {scale: 0.65}
+flowchart LR
+    subgraph YC["Your Machine"]
+        direction LR
+        H["Host<br/>(IDE / Agent Shell)"]
+        C["MCP Client"]
+        S1["MCP Server A<br/>(local · stdio)"]
+        DS1[("Local<br/>Data Source")]
+        H <--> C
+        C <-->|" JSON-RPC 2.0<br/>(stdio) "| S1
+        S1 <--> DS1
+    end
+
+```
+
+<!--
+- Zeit: 2 min
+- Die drei Rollen klar abgrenzen:
+  - Host = AI-App
+  - Client = Protokollschicht im Host
+  - Server = Fähigkeiten-Anbieter
+- Wichtiger Punkt: Host und Server können unabhängig voneinander entwickelt werden – das ist die Stärke des Standards.
+- Der Host kann mehrere Clients gleichzeitig nutzen.
+- Diagramm erläutern: lokal über stdio (einfach, schnell, für Entwicklung), remote über HTTP (produktionstauglich, skalierbar).
+- Beispiel aus der Praxis: VS Code mit GitHub Copilot ist der Host + Client. Unser StarAgent-Server ist der MCP Server.
+-->
+
+---
+transition: fade
+hideInToc: true
+---
+
+# MCP Architecture
+
+```mermaid {scale: 0.65}
+flowchart LR
+    subgraph YC["Your Machine"]
+        H["Host<br/>(IDE / Agent Shell)"]
+        C["MCP Client"]
+        S1["MCP Server A<br/>(local · stdio)"]
+        S2["MCP Server B<br/>(local · stdio)"]
+        DS1[("Local<br/>Data Source")]
+        H <--> C
+        C <-->|" JSON-RPC 2.0<br/>(stdio) "| S1
+        C <-->|" JSON-RPC 2.0<br/>(stdio) "| S2
+        S1 <--> DS1
+    end
+    subgraph Internet["External Systems"]
+        DS2[("Database /<br/>File Store")]
+    end
+    S2 <-->|" Web APIs "| DS2
+```
+
+<!--
+- Zeit: 1 min
+- Die drei Rollen klar abgrenzen:
+  - Host = AI-App
+  - Client = Protokollschicht im Host
+  - Server = Fähigkeiten-Anbieter
+- Wichtiger Punkt: Host und Server können unabhängig voneinander entwickelt werden – das ist die Stärke des Standards.
+- Der Host kann mehrere Clients gleichzeitig nutzen.
+- Diagramm erläutern: lokal über stdio (einfach, schnell, für Entwicklung), remote über HTTP (produktionstauglich, skalierbar).
+- Beispiel aus der Praxis: VS Code mit GitHub Copilot ist der Host + Client. Unser StarAgent-Server ist der MCP Server.
+-->
+
+---
 transition: slide-up
+hideInToc: true
 ---
 
 # MCP Architecture
@@ -210,7 +280,7 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 3 min
+- Zeit: 1 min
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
   - Client = Protokollschicht im Host
@@ -282,17 +352,19 @@ hideInToc: true
 
 ### Decision guide
 
-- **Tool** → the model needs to *do* something or fetch dynamic data
+- **Tool** → the model needs to _do_ something or fetch dynamic data
 - **Resource** → stable, readable document or data set (like a file or config)
 - **Prompt** → standardized, repeatable workflow the model should follow
 
 <!--
 - Zeit: 1 min
 - Governance-Hinweis: Die drei Primitiv-Typen haben unterschiedliche Risikoprofile – Tools können Seiteneffekte haben, Resources und Prompts sind read-only.
+- Dann kommen wir zu: **Wie funktioniert "MCP"**
 -->
 
 ---
 transition: slide-up
+section: { title: How LLM and MCP Actually Talk, duration: 2m }
 ---
 
 # How LLM and MCP Actually Talk
@@ -315,11 +387,13 @@ LLM
 
 The MCP server never knows which LLM or client is on the other end.
 One server works with every MCP-compatible host – the host handles the translation.
+
 <!--
 - Zeit: 2 min
 - Kernbotschaft deutlich machen: LLM und MCP-Server sprechen **nie direkt** miteinander. Der Host ist immer der Vermittler und die Kontrollinstanz.
 - JSON-RPC 2.0 ist kein Hexenwerk – es sind strukturierte Textnachrichten mit `method`, `params` und `result`.
-- Details folgen auf den nächsten Folien: Der Host fragt den Server nach Fähigkeiten und übersetzt sie in Function-Definitions für das Modell.
+- Auf Git folgen weitere Folien, mit detalierteren Beschreibungen.
+- Dann kommen wir zu: **Wir implementieren "MCP"**
 -->
 
 ---
@@ -367,7 +441,6 @@ hideFor: live
 ```
 
 <!--
-- Zeit: 0 min
 - Discovery-Vorgang: Der Host fragt den Server nach seinen Fähigkeiten und übersetzt das in Function-Definitions für das Modell.
 - Highlight: Das LLM „sieht“ nur die Tool-Schemata – es weiß nicht, ob dahinter .NET, Python oder ein Toaster steckt.
 -->
@@ -412,7 +485,6 @@ hideInToc: true
 ```
 
 <!--
-- Zeit: 0 min
 - Highlight: Das LLM „sieht“ nur die Tool-Schemata – es weiß nicht, ob dahinter .NET, Python oder ein Toaster steckt.
 -->
 
@@ -437,7 +509,6 @@ hideInToc: true
 ```
 
 <!--
-- Zeit: 0 min
 - Das LLM entscheidet, ob es ein Tool aufrufen will – es gibt einfach JSON zurück. Keine Magie.
 -->
 
@@ -467,7 +538,6 @@ hideInToc: true
 ```
 
 <!--
-- Zeit: 0 min
 - Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
 -->
 
@@ -497,7 +567,6 @@ hideInToc: true
 ```
 
 <!--
-- Zeit: 0 min
 - Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
 -->
 
@@ -528,7 +597,6 @@ sequenceDiagram
 ```
 
 <!--
-- Zeit: 0,5 min
 - Lifecycle-Tabelle nur kurz streifen: Diese Calls gibt es, der Host verwaltet sie automatisch. Man muss sie nicht selbst implementieren – **das SDK erledigt das**.
 - Sequenzdiagramm ist das Herzstück: Hier wird sichtbar, dass der Host die Kontrolle behält. Das LLM macht einen Vorschlag (Tool Call), aber der Host entscheidet, ob er ausgeführt wird.
 - Wichtige Botschaft: Der Host ist die Sicherheitsinstanz – nicht das LLM.
@@ -551,12 +619,9 @@ hideInToc: true
 | Discovery  | `tools/list` · `resources/list` · `prompts/list` | Client → Server |
 | Invocation | `tools/call` · `resources/read` · `prompts/get`  | Client → Server |
 
-<!--
-- Zeit: 0 min
--->
-
 ---
 transition: slide-left
+section: { title: Microsoft MCP SDK for .NET, duration: 15m }
 ---
 
 # Microsoft MCP SDK for .NET
@@ -581,8 +646,56 @@ dotnet add package ModelContextProtocol
 ```
 
 <!--
+- Zeit: 3 min
+-->
+
+<!--
 - Zeit: 2 min
-- SDK einordnen: War gerade noch Preview-Paket.
+- SDK einordnen: War gerade noch Preview-Paket. Jetzt Version 1.4.
+-->
+
+---
+title: "Demo: Projekt erstellen und MCP konfigurieren"
+transition: slide-left
+layout: terminal
+cast: "/assets/casts/install.cast"
+---
+
+---
+title: "Live Demo: StarAgent MCP Server"
+layout: codeeditor
+transition: slide-left
+---
+
+> // Program.cs
+
+<MonacoSync />
+```csharp {monaco}  {height:'380px'}
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+```
+
+<!--
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly()
+    .WithResourcesFromAssembly()
+    .WithPromptsFromAssembly();
+
+await builder.Build().RunAsync();
+
+- Zeit: 8 min
+- Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
+- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
+- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
+- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
+- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
+- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
+- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+- Überleitung zur nächsten Folie: Die eigentliche Registrierung der Capabilities läuft attributbasiert.
 -->
 
 ---
@@ -612,7 +725,18 @@ transition: slide-left
 
 <!--
 - Zeit: 1 min
-- Überleitung zur nächsten Folie: Die eigentliche Registrierung der Capabilities läuft attributbasiert.
+- Überleitung zur Demo: Genug Theorie. Schauen wir uns das live an.
+-->
+
+---
+title: "Demo: Projekt erstellen und MCP konfigurieren"
+transition: slide-left
+layout: terminal
+cast: "/assets/casts/install.cast"
+---
+
+<!--
+- Zeit: 3 min
 -->
 
 ---
@@ -680,63 +804,6 @@ layout: center
 <!--
 - Zeit: 0,5 min
 - **Überleitung:** wir erstellen das Projekt
--->
-
----
-title: INSTALL TEST
-transition: slide-left
-layout: terminal
-cast: '/assets/casts/demo.cast'
----
-
-<!--
-- Zeit: 1 min
--->
-
----
-title: "Live Demo: StarAgent MCP Server"
-transition: slide-left
----
-
-# Live Demo: StarAgent MCP Server (stdio)
-
-### Bootstrap (`Program.cs`)
-
-<MonacoSync />
-```csharp {monaco}  {height:'380px'}
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Services
-.AddMcpServer()
-.WithStdioServerTransport()
-.WithToolsFromAssembly()
-.WithResourcesFromAssembly()
-.WithPromptsFromAssembly();
-
-await builder.Build().RunAsync();
-
-```
-
-<!--
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithResourcesFromAssembly()
-    .WithPromptsFromAssembly();
-
-await builder.Build().RunAsync();
-
-- Zeit: 8 min
-- Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
-- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
-- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
-- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
-- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
-- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
-- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
 -->
 
 ---
@@ -912,7 +979,7 @@ await host.RunAsync();
 -->
 
 ---
-transition: slide-left
+transition: slide-up
 zoom: 0.95
 ---
 
@@ -1020,7 +1087,7 @@ transition: slide-left
 transition: slide-up
 hideInToc: true
 layout: cover
-background: '/assets/BLMeetingBackground.png'
+background: "/assets/BLMeetingBackground.png"
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />
@@ -1035,6 +1102,6 @@ background: '/assets/BLMeetingBackground.png'
 ---
 zoom: 1.7
 layout: terminal
-cast: '/assets/casts/sw.cast'
+cast: "/assets/casts/sw.cast"
 hideFor: live
 ---

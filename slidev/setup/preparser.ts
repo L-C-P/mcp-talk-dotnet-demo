@@ -15,6 +15,12 @@ function normalizeAudienceList(value: string | string[]): string[] {
 }
 
 export default definePreparserSetup(async ({ headmatter }) => {
+  // Bypass filter when AUDIENCE=bypass (e.g., for IDE editing)
+  // Usage: AUDIENCE=bypass npm exec -c 'slidev ${args}'
+  if (typeof process !== 'undefined' && process.env.AUDIENCE === 'bypass') {
+    return []
+  }
+
   // Priority 1: Environment variable AUDIENCE (CLI override)
   // Priority 2: Headmatter audience setting
   const envAudience = typeof process !== 'undefined' ? process.env.AUDIENCE : undefined

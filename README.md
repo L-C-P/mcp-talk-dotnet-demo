@@ -24,6 +24,82 @@ Deployment to GitHub Pages runs automatically via `.github/workflows/deploy-page
 The deck uses hash routing for GitHub Pages compatibility, so direct slide URLs look like
 `https://l-c-p.github.io/mcp-talk-dotnet-demo/#/1`.
 
+## Audience filtering (Target Group Presentations)
+
+The deck supports audience-specific slide filtering, similar to PowerPoint's "Custom Shows" feature. This allows hiding
+slides for certain audiences (e.g., technical deep-dives vs. management overview).
+
+### Configuration
+
+Audience filtering is controlled via the `audience` property in `slidev/slides.md` headmatter or via the `AUDIENCE`
+environment variable (CLI override).
+
+#### 1. Set active audience in headmatter
+
+In `slidev/slides.md`, set the `audience` property:
+
+```yaml
+---
+audience: tech, mgmt
+---
+```
+
+Use `audience: all` to show every slide without filtering.
+
+#### 2. Per-slide visibility rules
+
+Add `showFor` or `hideFor` to individual slides:
+
+```yaml
+---
+showFor: [tech]
+---
+```
+
+or
+
+```yaml
+---
+hideFor: [mgmt]
+---
+```
+
+**Default behavior:** Slides without both properties are always visible for all audiences.
+
+**Syntax:** Supports both YAML lists (`[tech, mgmt]`) and comma-separated strings (`tech, mgmt`).
+
+### Available npm scripts
+
+| Script            | Description                                      |
+|-------------------|--------------------------------------------------|
+| `npm run dev`     | Start dev server (no filtering if audience not set in headmatter) |
+| `npm run dev:live`| Start with `AUDIENCE=live` filtering            |
+| `npm run build:live`| Build with `AUDIENCE=live` filtering          |
+
+### IDE Tooling Configuration
+
+**Important for Rider/VS Code plugins:**
+
+IDE plugins (like the Slidev Rider plugin) may get confused by filtered slides because they expect the full slide list.
+To work with the complete slide deck in your IDE while the filtering is active:
+
+1. **Set the bypass mode:**
+   ```bash
+   AUDIENCE=bypass npm exec -c 'slidev ${args}'
+   ```
+
+2. **Or use the npm script (recommended):**
+   ```bash
+   npm run dev:ide
+   ```
+
+This disables the audience filter and shows all slides to the IDE plugin, preventing navigation issues.
+
+**For your IDE's run configuration**, set the command to:
+```
+AUDIENCE=bypass npm exec -c 'slidev ${args}'
+```
+
 ## Local setup
 
 1. Install dependencies:

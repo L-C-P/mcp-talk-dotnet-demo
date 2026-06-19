@@ -1,6 +1,6 @@
 <template>
-  <div class="slidev-layout default">
-    <MonacoSync />
-    <slot />
+  <div class="slidev-layout codeeditor">
+    <MonacoSync/>
+    <slot/>
   </div>
 </template>
