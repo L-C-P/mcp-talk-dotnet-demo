@@ -1,10 +1,30 @@
 import { defineAppSetup } from '@slidev/types'
+import { slides } from '#slidev/slides'
 
 export default defineAppSetup(({ router }) => {
 
   const getPresenterSlideId = (path: string) => {
     const match = path.match(/\/presenter\/([^/?#]+)/)
     return match?.[1]
+  }
+  const getPresenterSlideNo = (path: string) => {
+    const slideId = getPresenterSlideId(path)
+    if (!slideId)
+      return null
+
+    const slideNo = Number(slideId)
+    if (!Number.isInteger(slideNo))
+      return null
+
+    return slideNo
+  }
+  const getLastPresenterSlideNo = () => {
+    return slides.value.reduce((maxSlideNo, slide) => {
+      if (typeof slide.no !== 'number')
+        return maxSlideNo
+
+      return Math.max(maxSlideNo, slide.no)
+    }, 0)
   }
   const clickPresenterTimerPlay = () => {
     if (typeof document === 'undefined')
@@ -18,45 +38,83 @@ export default defineAppSetup(({ router }) => {
     toggleButton.click()
     return true
   }
+  const clickPresenterTimerPause = () => {
+    if (typeof document === 'undefined')
+      return false
 
-  let timerAutoStartRunId = 0
+    const pauseIcon = document.querySelector<HTMLElement>('.slidev-presenter .grid-section.bottom .i-carbon\\:pause')
+    const toggleButton = pauseIcon?.parentElement as HTMLElement | null
+    if (!toggleButton)
+      return false
 
-  const schedulePresenterTimerAutoStart = () => {
-    timerAutoStartRunId += 1
-    const runId = timerAutoStartRunId
+    toggleButton.click()
+    return true
+  }
+
+  let timerControlRunId = 0
+
+  const schedulePresenterTimerControl = (action: 'start' | 'stop') => {
+    timerControlRunId += 1
+    const runId = timerControlRunId
     const maxAttempts = 6
     const retryDelayMs = 250
 
-    const attemptAutoStart = (attempt: number) => {
-      if (runId !== timerAutoStartRunId)
+    const attemptTimerControl = (attempt: number) => {
+      if (runId !== timerControlRunId)
         return
 
-      const currentPresenterSlide = getPresenterSlideId(router.currentRoute.value.path)
-      if (!currentPresenterSlide)
+      const currentPresenterSlide = getPresenterSlideNo(router.currentRoute.value.path)
+      if (currentPresenterSlide === null)
         return
 
-      clickPresenterTimerPlay()
+      const lastPresenterSlideNo = getLastPresenterSlideNo()
+
+      if (action === 'start' && currentPresenterSlide === lastPresenterSlideNo)
+        return
+
+      if (action === 'stop' && currentPresenterSlide !== lastPresenterSlideNo)
+        return
+
+      if (action === 'start')
+        clickPresenterTimerPlay()
+      else
+        clickPresenterTimerPause()
 
       if (attempt >= maxAttempts)
         return
 
       setTimeout(() => {
         requestAnimationFrame(() => {
-          attemptAutoStart(attempt + 1)
+          attemptTimerControl(attempt + 1)
         })
       }, retryDelayMs)
     }
+
     requestAnimationFrame(() => {
-      if (runId !== timerAutoStartRunId)
+      if (runId !== timerControlRunId)
         return
-      attemptAutoStart(1)
+      attemptTimerControl(1)
     })
+  }
+  const schedulePresenterTimerAutoStart = () => {
+    schedulePresenterTimerControl('start')
+  }
+  const schedulePresenterTimerStop = () => {
+    schedulePresenterTimerControl('stop')
   }
 
   router.afterEach((to, from) => {
-    const toSlide = getPresenterSlideId(to.path)
-    const fromSlide = getPresenterSlideId(from.path)
-    if (!toSlide || !fromSlide || toSlide === fromSlide)
+    const toSlide = getPresenterSlideNo(to.path)
+    const fromSlide = getPresenterSlideNo(from.path)
+    if (toSlide === null || toSlide === fromSlide)
+      return
+
+    if (toSlide === getLastPresenterSlideNo()) {
+      schedulePresenterTimerStop()
+      return
+    }
+
+    if (fromSlide === null)
       return
 
     schedulePresenterTimerAutoStart()
