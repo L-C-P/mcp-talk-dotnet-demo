@@ -19,18 +19,46 @@ export default defineAppSetup(({ router }) => {
     return true
   }
 
-  router.afterEach((to, from) => {
+  let timerAutoStartRunId = 0
 
+  const schedulePresenterTimerAutoStart = () => {
+    timerAutoStartRunId += 1
+    const runId = timerAutoStartRunId
+    const maxAttempts = 6
+    const retryDelayMs = 250
+
+    const attemptAutoStart = (attempt: number) => {
+      if (runId !== timerAutoStartRunId)
+        return
+
+      const currentPresenterSlide = getPresenterSlideId(router.currentRoute.value.path)
+      if (!currentPresenterSlide)
+        return
+
+      clickPresenterTimerPlay()
+
+      if (attempt >= maxAttempts)
+        return
+
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          attemptAutoStart(attempt + 1)
+        })
+      }, retryDelayMs)
+    }
+    requestAnimationFrame(() => {
+      if (runId !== timerAutoStartRunId)
+        return
+      attemptAutoStart(1)
+    })
+  }
+
+  router.afterEach((to, from) => {
     const toSlide = getPresenterSlideId(to.path)
     const fromSlide = getPresenterSlideId(from.path)
     if (!toSlide || !fromSlide || toSlide === fromSlide)
       return
-    requestAnimationFrame(() => {
-      if (clickPresenterTimerPlay())
-        return
-      requestAnimationFrame(() => {
-        clickPresenterTimerPlay()
-      })
-    })
+
+    schedulePresenterTimerAutoStart()
   })
 })
