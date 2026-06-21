@@ -27,7 +27,6 @@ interface LiveCursorPayload {
   editorKey: string
   sourceId: string
   version: number
-  /** Cursor and selection are only shown on clients while the host editor keeps focus. */
   visible: boolean
   cursor: { lineNumber: number, column: number } | null
   selection: LiveCursorRange | null
@@ -214,6 +213,10 @@ function touchLocalSharedStateMeta(): void {
 }
 
 function publishCodePayload(payload: LiveCodeSyncPayload): void {
+  // Always cache locally so changes persist across slide unmount/remount
+  latestRemoteVersionByEditorKey.set(payload.editorKey, payload.version)
+  cachedPayloadByEditorKey.set(payload.editorKey, payload)
+
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveCodeSync: payload })
     return
@@ -223,6 +226,9 @@ function publishCodePayload(payload: LiveCodeSyncPayload): void {
 }
 
 function publishCursorPayload(payload: LiveCursorPayload): void {
+  latestRemoteCursorVersionByEditorKey.set(payload.editorKey, payload.version)
+  cachedCursorPayloadByEditorKey.set(payload.editorKey, payload)
+
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveCursorSync: payload })
     return
@@ -232,6 +238,9 @@ function publishCursorPayload(payload: LiveCursorPayload): void {
 }
 
 function publishScrollPayload(payload: LiveScrollPayload): void {
+  latestRemoteScrollVersionByEditorKey.set(payload.editorKey, payload.version)
+  cachedScrollPayloadByEditorKey.set(payload.editorKey, payload)
+
   if (typeof syncState.$patch === 'function') {
     void syncState.$patch({ liveScrollSync: payload })
     return
@@ -693,17 +702,51 @@ function trackEditor(editor: StandaloneCodeEditor): void {
   const onDispose = editor.onDidDispose(() => untrackEditor(editorId))
   editorSubscriptions.set(editorId, { onChange, onCursorPosition, onCursorSelection, onScroll, onFocus, onBlur, onDispose })
 
-  const payload = cachedPayloadByEditorKey.get(editorKey)
-  if (payload)
-    applyPayloadToEditor(editor, payload)
+  // Restore from cache: local cache first, then sharedState
+  const cachedPayload = cachedPayloadByEditorKey.get(editorKey)
+  const sharedPayload = syncState.liveCodeSync
+  let payloadToApply: LiveCodeSyncPayload | null = null
+  if (cachedPayload) {
+    payloadToApply = cachedPayload
+  }
+  else if (sharedPayload && getSlideNoFromEditorKey(sharedPayload.editorKey) === slideNo.value) {
+    // Restore from shared state and seed local cache
+    payloadToApply = sharedPayload
+    latestRemoteVersionByEditorKey.set(sharedPayload.editorKey, sharedPayload.version)
+    cachedPayloadByEditorKey.set(sharedPayload.editorKey, sharedPayload)
+  }
+  if (payloadToApply)
+    applyPayloadToEditor(editor, payloadToApply)
 
-  const cursorPayload = cachedCursorPayloadByEditorKey.get(editorKey)
-  if (cursorPayload)
-    applyCursorPayloadToEditor(editor, cursorPayload)
+  // Restore cursor state
+  const cachedCursor = cachedCursorPayloadByEditorKey.get(editorKey)
+  const sharedCursor = syncState.liveCursorSync
+  let cursorPayloadToApply: LiveCursorPayload | null = null
+  if (cachedCursor) {
+    cursorPayloadToApply = cachedCursor
+  }
+  else if (sharedCursor && getSlideNoFromEditorKey(sharedCursor.editorKey) === slideNo.value) {
+    cursorPayloadToApply = sharedCursor
+    latestRemoteCursorVersionByEditorKey.set(sharedCursor.editorKey, sharedCursor.version)
+    cachedCursorPayloadByEditorKey.set(sharedCursor.editorKey, sharedCursor)
+  }
+  if (cursorPayloadToApply)
+    applyCursorPayloadToEditor(editor, cursorPayloadToApply)
 
-  const scrollPayload = cachedScrollPayloadByEditorKey.get(editorKey)
-  if (scrollPayload)
-    applyScrollPayloadToEditor(editor, scrollPayload)
+  // Restore scroll state
+  const cachedScroll = cachedScrollPayloadByEditorKey.get(editorKey)
+  const sharedScroll = syncState.liveScrollSync
+  let scrollPayloadToApply: LiveScrollPayload | null = null
+  if (cachedScroll) {
+    scrollPayloadToApply = cachedScroll
+  }
+  else if (sharedScroll && getSlideNoFromEditorKey(sharedScroll.editorKey) === slideNo.value) {
+    scrollPayloadToApply = sharedScroll
+    latestRemoteScrollVersionByEditorKey.set(sharedScroll.editorKey, sharedScroll.version)
+    cachedScrollPayloadByEditorKey.set(sharedScroll.editorKey, sharedScroll)
+  }
+  if (scrollPayloadToApply)
+    applyScrollPayloadToEditor(editor, scrollPayloadToApply)
 }
 
 function stopSync(): void {

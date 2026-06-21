@@ -621,7 +621,7 @@ hideInToc: true
 
 ---
 transition: slide-left
-section: { title: Microsoft MCP SDK for .NET, duration: 15m }
+section: { title: Microsoft MCP SDK for .NET, duration: 4m }
 ---
 
 # Microsoft MCP SDK for .NET
@@ -646,47 +646,133 @@ dotnet add package ModelContextProtocol
 ```
 
 <!--
-- Zeit: 3 min
--->
-
-<!--
 - Zeit: 2 min
 - SDK einordnen: War gerade noch Preview-Paket. Jetzt Version 1.4.
+- **Überleitung:** Genug geredet, wir erstellen das StarAgent Projekt.
 -->
 
 ---
-title: "Demo: Projekt erstellen und MCP konfigurieren"
+title: "Demo: Projekt erstellen"
 transition: slide-left
 layout: terminal
-cast: "/assets/casts/install.cast"
+cast: "/assets/casts/createproject.cast"
 ---
 
+<!--
+- Zeit: 1 min
+-->
+
 ---
-title: "Live Demo: StarAgent MCP Server"
 layout: codeeditor
-transition: slide-left
+transition: none
+section: { title: Program.cs, duration: 5m }
 ---
 
 > // Program.cs
-
-<MonacoSync />
-```csharp {monaco}  {height:'380px'}
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-```
+<<< @/snippets/Program.cs
 
 <!--
-var builder = Host.CreateApplicationBuilder(args);
+- Program.cs zeigen und auf den nächsten Folien erklären.
+-->
 
-builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithResourcesFromAssembly()
-    .WithPromptsFromAssembly();
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
 
-await builder.Build().RunAsync();
+> // Program.cs
+<<< @/snippets/Program.cs {1-5}
 
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {7-8}
+
+<!--
+- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
+-->
+
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {10-11}
+
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {12}
+
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {13}
+
+<!--
+-- Hier mit Stdio.
+-->
+
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {14-16}
+
+<!--
+- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
+- `.WithToolsFromAssembly(typeof(ChartTools).Assembly)`
+- `.WithTools<Tool>()` – nur eine bestimmte Klasse registrieren.
+-->
+
+---
+layout: codeeditor
+transition: none
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {18}
+
+---
+layout: codeeditor
+transition: slide-left
+hideInToc: true
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs
+
+---
+transition: slide-left
+section: { title: "Tools, Resources, Prompts", duration: 5m }
+---
+
+### Demo capabilities
+
+- Tool: `get_chart_position`
+- Resource: `rider://artist/{name}`
+- Prompt: `concert_press_release`
+
+<!--
 - Zeit: 8 min
 - Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
 - Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
@@ -695,11 +781,124 @@ await builder.Build().RunAsync();
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
 - Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
 - Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
-- Überleitung zur nächsten Folie: Die eigentliche Registrierung der Capabilities läuft attributbasiert.
 -->
 
 ---
-title: Register the server in your MCP host
+layout: codeeditor
+transition: slide-left
+---
+
+> // ChartTools.cs
+
+<MonacoSync />
+```csharp {monaco}  {height:'460px'}
+using ModelContextProtocol.Server;
+using StarAgent.McpServer.Shared.Models;
+using StarAgent.McpServer.Shared.Services;
+using System.ComponentModel;
+
+[McpServerToolType]
+public static class ChartTools
+{
+
+}
+
+```
+
+<!--
+```
+
+    [McpServerTool(Name = "get_chart_position")]
+    [Description("Returns the chart position of a song on a given chart.")]
+    public static ChartResult GetChartPosition(
+        [Description("Song title")] string songTitle,
+        [Description("Artist name")] string artist,
+        [Description("Chart name")] string chart = "Billboard Hot 100")
+    {
+        return ChartDataService.Lookup(songTitle, artist, chart);
+    }
+
+```
+
+- Zeit: 2 min
+- Attribute-Ansatz betonen: Wer .NET kennt, fühlt sich sofort zu Hause. Kein Boilerplate, kein manuelles JSON-Parsing.
+- Description-Attribute sind entscheidend: Sie landen direkt im Tool-Schema, das das LLM sieht. Je klarer die Description, desto besser die Tool-Auswahl durch das Modell.
+-->
+
+---
+layout: codeeditor
+transition: slide-left
+---
+
+> // RiderResources.cs
+
+<MonacoSync />
+```csharp {monaco}  {height:'460px'}
+using ModelContextProtocol.Server;
+using StarAgent.McpServer.Shared.Models;
+using StarAgent.McpServer.Shared.Services;
+using System.ComponentModel;
+
+[McpServerResourceType]
+public static class RiderResources
+{
+
+}
+
+```
+
+<!--
+```
+    [McpServerResource(
+        UriTemplate = "rider://artist/{name}",
+        Name = "artist_rider",
+        MimeType = "application/json")]
+    [Description("Returns the backstage rider for an artist.")]
+    public static string GetRider(
+        [Description("Artist slug")] string name)
+    {
+        return RiderDataService.Load(name);
+    }
+```
+
+- **Hinweis:** Der Host kann auf ein Update der Resource abonieren und wird dann entsprchend benachrichtigt.
+-->
+
+---
+layout: codeeditor
+transition: slide-left
+---
+
+> // McpServerPromptType.cs
+
+<CodeBlockSync />
+> <<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
+
+---
+layout: center
+transition: none
+---
+
+# Demo: Register MCP
+
+---
+hideInToc: true
+transition: slide-left
+layout: terminal
+cast: "/assets/casts/mcp.cast"
+---
+
+<!--
+- Zeit: 2 min
+
+- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
+- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
+- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
+- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+-->
+
+---
+title: Register MCP
 transition: slide-left
 ---
 
@@ -725,55 +924,11 @@ transition: slide-left
 
 <!--
 - Zeit: 1 min
-- Überleitung zur Demo: Genug Theorie. Schauen wir uns das live an.
 -->
 
 ---
-title: "Demo: Projekt erstellen und MCP konfigurieren"
-transition: slide-left
-layout: terminal
-cast: "/assets/casts/install.cast"
----
 
-<!--
-- Zeit: 3 min
--->
-
----
-transition: slide-left
----
-
-# Microsoft MCP SDK for .NET
-
-### Server-side: attribute-driven registration
-
-```csharp
-using ModelContextProtocol.Server;
-using System.ComponentModel;
-
-[McpServerToolType]
-public class ChartTools
-{
-    [McpServerTool(Name = "get_chart_position")]
-    [Description("Returns the chart position of a song.")]
-    public static ChartResult GetChartPosition(
-        [Description("Song title")] string songTitle,
-        [Description("Artist name")] string artist,
-        [Description("Chart name")] string chart = "Billboard Hot 100")
-    { ... }
-}
-
-// Resources and Prompts follow the same pattern
-[McpServerResourceType]   →   [McpServerResource(UriTemplate = "rider://artist/{name}")]
-[McpServerPromptType]     →   [McpServerPrompt(Name = "concert_press_release")]
-```
-
-<!--
-- Zeit: 2 min
-- Attribute-Ansatz betonen: Wer .NET kennt, fühlt sich sofort zu Hause. Kein Boilerplate, kein manuelles JSON-Parsing.
-- Description-Attribute sind entscheidend: Sie landen direkt im Tool-Schema, das das LLM sieht. Je klarer die Description, desto besser die Tool-Auswahl durch das Modell.
-- Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
--->
+# Using MCP
 
 ---
 transition: slide-left
@@ -790,75 +945,8 @@ var result = await client.CallToolAsync("get_chart_position",
 ```
 
 <!--
-- Zeit: 0,5 min
-- Überleitung zur Demo: Genug Theorie. Bauen wir das jetzt live.
--->
-
----
-transition: slide-left
-layout: center
----
-
-# DEMO
-
-<!--
-- Zeit: 0,5 min
-- **Überleitung:** wir erstellen das Projekt
--->
-
----
-transition: none
----
-
-```csharp
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithResourcesFromAssembly()
-    .WithPromptsFromAssembly();
-
-await builder.Build().RunAsync();
-```
-
----
-transition: slide-left
----
-
-```csharp {4-8}
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithResourcesFromAssembly()
-    .WithPromptsFromAssembly();
-
-await builder.Build().RunAsync();
-```
-
----
-transition: slide-left
----
-
-### Demo capabilities
-
-- Tool: `get_chart_position`
-- Resource: `rider://artist/{name}`
-- Prompt: `concert_press_release`
-
-<!--
-- Zeit: 8 min
-- Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
-- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
-- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
-- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
-- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
-- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
-- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+- Zeit: 1 min
+- Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
 -->
 
 ---
@@ -890,9 +978,6 @@ builder.Services
 var app = builder.Build();
 await app.RunAsync();
 ~~~
-using ModelContextProtocol.Server;
-using System.ComponentModel;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
@@ -907,6 +992,15 @@ var app = builder.Build();
 app.MapMcp();
 await app.RunAsync("http://localhost:3001");
 ```
+
+---
+title: Register MCP
+transition: slide-left
+---
+
+# Register the server in your MCP host
+
+### Development with http transport
 
 **Connect a host via `mcp.json`**
 
@@ -932,7 +1026,7 @@ await app.RunAsync("http://localhost:3001");
 -->
 
 ---
-transition: slide-left
+transition: slide-up
 ---
 
 # MCP on Azure Functions
@@ -942,10 +1036,14 @@ transition: slide-left
 **NuGet packages**
 
 ```shell
-dotnet add package ModelContextProtocol --prerelease
+dotnet add package ModelContextProtocol
 dotnet add package Microsoft.Azure.Functions.Worker
 dotnet add package Microsoft.Azure.Functions.Worker.Extensions.Http
 ```
+
+---
+transition: slide-left
+---
 
 **`Program.cs` – DI registration**
 
@@ -981,6 +1079,7 @@ await host.RunAsync();
 ---
 transition: slide-up
 zoom: 0.95
+section: { title: Current Developments, duration: 5m }
 ---
 
 # Current Developments: MCP Auto-Discovery
@@ -1042,6 +1141,7 @@ flowchart LR
 
 ---
 transition: slide-left
+section: { title: Key Takeaways, duration: 3m }
 ---
 
 # Key Takeaways
@@ -1080,14 +1180,25 @@ transition: slide-left
 
 <!--
 - Zeit: 1 min
-- Q&A öffnen.
+- **Überleitung:** Q&A öffnen.
 -->
+
+---
+layout: section
+transition: slide-left
+background: "/assets/SectionBackground.png"
+hideInToc: true
+section: { duration: 15m }
+---
+
+# Q&A
 
 ---
 transition: slide-up
 hideInToc: true
 layout: cover
 background: "/assets/BLMeetingBackground.png"
+section: { title: Bye, duration: 1m }
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />

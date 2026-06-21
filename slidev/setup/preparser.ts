@@ -1,4 +1,4 @@
-import { definePreparserSetup } from '@slidev/types'
+import {definePreparserSetup} from '@slidev/types'
 
 /**
  * Normalizes a value that can be either a string (comma-separated)
@@ -8,13 +8,15 @@ function normalizeAudienceList(value: string | string[]): string[] {
   if (Array.isArray(value)) {
     return value.map(v => v.trim().toLowerCase()).filter(Boolean)
   }
+
   if (typeof value === 'string') {
     return value.split(',').map(v => v.trim().toLowerCase()).filter(Boolean)
   }
+
   return []
 }
 
-export default definePreparserSetup(async ({ headmatter }) => {
+export default definePreparserSetup(async ({headmatter}) => {
   // Bypass filter when AUDIENCE=bypass (e.g., for IDE editing)
   // Usage: AUDIENCE=bypass npm exec -c 'slidev ${args}'
   if (typeof process !== 'undefined' && process.env.AUDIENCE === 'bypass') {
@@ -55,6 +57,7 @@ export default definePreparserSetup(async ({ headmatter }) => {
 
         if (isHidden) {
           frontmatter.disabled = true
+
           return content
         }
 
@@ -63,6 +66,7 @@ export default definePreparserSetup(async ({ headmatter }) => {
           const isVisible = showList.some(aud => activeAudiences.includes(aud))
           if (!isVisible) {
             frontmatter.disabled = true
+
             return content
           }
         }
