@@ -99,12 +99,13 @@ hideInToc: true
   - Was ist "MCP"
   - Wie funktioniert "MCP"
   - Wir implementieren "MCP"
+  - Ausblick
 - Auf GitHub gibt es zusätzliche Folien zur Verteifung.
 -->
 
 ---
 transition: slide-up
-section: { title: Why We Needed MCP, duration: 15m }
+section: { title: Why We Needed MCP, duration: 8m }
 ---
 
 # Why We Needed MCP
@@ -572,7 +573,6 @@ hideInToc: true
 
 ---
 transition: slide-up
-hideFor: live
 ---
 
 # Discovery & Runtime Sequence
@@ -621,7 +621,7 @@ hideInToc: true
 
 ---
 transition: slide-left
-section: { title: Microsoft MCP SDK for .NET, duration: 4m }
+section: { title: MCP SDK / Program.cs, duration: 6m }
 ---
 
 # Microsoft MCP SDK for .NET
@@ -655,8 +655,9 @@ dotnet add package ModelContextProtocol
 title: "Demo: Projekt erstellen"
 transition: slide-left
 layout: terminal
-cast: "/assets/casts/createproject.cast"
 ---
+
+<Asciinema src="/assets/casts/createproject.cast"/>
 
 <!--
 - Zeit: 1 min
@@ -665,7 +666,6 @@ cast: "/assets/casts/createproject.cast"
 ---
 layout: codeeditor
 transition: none
-section: { title: Program.cs, duration: 5m }
 ---
 
 > // Program.cs
@@ -725,7 +725,7 @@ hideInToc: true
 <<< @/snippets/Program.cs {13}
 
 <!--
--- Hier mit Stdio.
+- Hier mit Stdio.
 -->
 
 ---
@@ -761,6 +761,10 @@ hideInToc: true
 > // Program.cs
 <<< @/snippets/Program.cs
 
+<!--
+- **Überleitung:** Was implementieren wir in der Demo
+-->
+
 ---
 transition: slide-left
 section: { title: "Tools, Resources, Prompts", duration: 5m }
@@ -768,7 +772,7 @@ section: { title: "Tools, Resources, Prompts", duration: 5m }
 
 ### Demo capabilities
 
-- Tool: `get_chart_position`
+- Tool: `get_chart_position, book_venue`
 - Resource: `rider://artist/{name}`
 - Prompt: `concert_press_release`
 
@@ -784,8 +788,22 @@ section: { title: "Tools, Resources, Prompts", duration: 5m }
 -->
 
 ---
+hideInToc: true
+transition: slide-left
+layout: terminal
+---
+
+<Asciinema src="/assets/casts/projectstructure.cast"/>
+
+<!--
+- Ich habe da schonmal etwas vorbereitet…
+- **Überleitung:** Schauen wir uns die Projektstruktur an – drei Klassen für Tools, Resources und Prompts. Alle sind komplett leer – wir füllen sie gleich live.
+-->
+
+---
 layout: codeeditor
 transition: slide-left
+showFor: live
 ---
 
 > // ChartTools.cs
@@ -828,6 +846,17 @@ public static class ChartTools
 ---
 layout: codeeditor
 transition: slide-left
+hideFor: live
+---
+
+> // ChartTools.cs
+
+<<< @/snippets/ChartTools.cs {maxHeight: '440px'}
+
+---
+layout: codeeditor
+transition: slide-left
+showFor: live
 ---
 
 > // RiderResources.cs
@@ -861,8 +890,18 @@ public static class RiderResources
     }
 ```
 
-- **Hinweis:** Der Host kann auf ein Update der Resource abonieren und wird dann entsprchend benachrichtigt.
+- **Hinweis:** Der Host kann auf ein Update der Resource abonieren und wird dann entsprechend benachrichtigt.
 -->
+
+---
+layout: codeeditor
+transition: slide-left
+hideFor: live
+---
+
+> // RiderResources.cs
+
+<<< @/snippets/RiderResources.cs {maxHeight: '440px'}
 
 ---
 layout: codeeditor
@@ -874,27 +913,8 @@ transition: slide-left
 <CodeBlockSync />
 > <<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
 
----
-layout: center
-transition: none
----
-
-# Demo: Register MCP
-
----
-hideInToc: true
-transition: slide-left
-layout: terminal
-cast: "/assets/casts/mcp.cast"
----
-
 <!--
-- Zeit: 2 min
-
-- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
-- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
-- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
-- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden.
 -->
 
 ---
@@ -924,14 +944,59 @@ transition: slide-left
 
 <!--
 - Zeit: 1 min
+- **Überleitung:** Wir nutzen den MCP.
 -->
 
 ---
+layout: center
+transition: none
+section: { duration: 6m }
+---
 
-# Using MCP
+# Demo
+
+---
+hideInToc: true
+transition: slide-left
+layout: terminal
+---
+
+<Asciinema src="/assets/casts/mcp.cast" />
+
+<!--
+- Zeit: 5 min
+- Claude erkennt den MCP automatisch.
+- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
+- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley" generieren lassen.
+- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+-->
 
 ---
 transition: slide-left
+---
+
+# Debug-Tipp
+
+> npx @modelcontextprotocol/inspector
+
+<img src="@/public/assets/Inspector.png" alt="MCP Inspector" class = "h-100">
+
+<!--
+- Features:
+    - Resources
+    - Prompts
+    - Tools
+- Hinweis auf neues Features:
+    - Tasks
+    - Apps
+    - ...
+
+Dazu wird Lukas Beerschwinger noch einen Talk in der Brownbacksession halten.
+-->
+
+---
+transition: slide-left
+hideFor: live
 ---
 
 # Host-side: discover and invoke
@@ -951,6 +1016,7 @@ var result = await client.CallToolAsync("get_chart_position",
 
 ---
 transition: slide-left
+section: { title: HTTP & Functions, duration: 2m }
 ---
 
 # HTTP Transport: Reference
@@ -1079,7 +1145,7 @@ await host.RunAsync();
 ---
 transition: slide-up
 zoom: 0.95
-section: { title: Current Developments, duration: 5m }
+section: { title: Current Developments, duration: 8m }
 ---
 
 # Current Developments: MCP Auto-Discovery
@@ -1141,7 +1207,6 @@ flowchart LR
 
 ---
 transition: slide-left
-section: { title: Key Takeaways, duration: 3m }
 ---
 
 # Key Takeaways
@@ -1188,7 +1253,7 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
-section: { duration: 15m }
+section: { duration: 15m, buffer: 15m }
 ---
 
 # Q&A
@@ -1213,6 +1278,7 @@ section: { title: Bye, duration: 1m }
 ---
 zoom: 1.7
 layout: terminal
-cast: "/assets/casts/sw.cast"
 hideFor: live
 ---
+
+<Asciinema src="/assets/casts/sw.cast"/>
