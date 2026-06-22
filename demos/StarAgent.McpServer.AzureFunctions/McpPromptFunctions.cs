@@ -9,25 +9,13 @@ namespace StarAgent.McpServer.AzureFunctions;
 public class McpPromptFunctions
 {
     [Function(nameof(GetConcertPressReleasePrompt))]
-    public string GetConcertPressReleasePrompt([McpPromptTrigger("concert_press_release", Description = "Generates a dramatic concert press release.")] PromptInvocationContext context)
+    public string GetConcertPressReleasePrompt(
+        [McpPromptTrigger("concert_press_release", Description = "Generates a dramatic concert press release.")] PromptInvocationContext context,
+        [McpPromptArgument("artist", "Artist name", true)] string artist = "the featured artist",
+        [McpPromptArgument("venue", "Venue name", true)] string venue = "the main stage",
+        [McpPromptArgument("date", "Concert date", true)] string date = "TBA",
+        [McpPromptArgument("tourName", "Tour name", true)] string tourName = "The Legend Returns Tour")
     {
-        string artist = GetArgument(context, "artist", "the featured artist");
-        string venue = GetArgument(context, "venue", "the main stage");
-        string date = GetArgument(context, "date", "TBA");
-        string tourName = GetArgument(context, "tourName", "The Legend Returns Tour");
-
         return $"Write a dramatic press release for {artist} performing '{tourName}' at {venue} on {date}. The legend returns.";
-    }
-
-    private static string GetArgument(PromptInvocationContext context, string key, string fallback)
-    {
-        if (context.Arguments is not null &&
-            context.Arguments.TryGetValue(key, out string? value) &&
-            !string.IsNullOrWhiteSpace(value))
-        {
-            return value.Trim();
-        }
-
-        return fallback;
     }
 }
