@@ -168,6 +168,7 @@ transition: slide-left
     - *Tasks (asynchrone Ausführung)*
     - ~~MCP Apps (UI-Rendering)~~
     - Elicitation (Server fragt User)
+        - Aktuell nur VS Code / GitHub Copilot
     - Structured Output
     - Resource Links
     - OAuth 2.1 / Authorization
@@ -934,13 +935,9 @@ section: { title: Demo, duration: 5m }
 <!--
 - **Überleitung:** Wir nutzen den MCP-Server.
 - Claude erkennt MCP automatisch
-- Wo steht Bohemian Rhapsody von Queen in den Charts?
-- Zeig mir das Backstage-Rider für Van Halen
-- Erstelle eine Pressemeldung für das Queen-Konzert am 26.06.2026 im Metronom Theater Oberhausen
 -->
 
 ---
-hideInToc: true
 transition: slide-left
 layout: terminal
 hide: true
@@ -950,7 +947,10 @@ hide: true
 
 <!--
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
-- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley" generieren lassen.
+- Wo steht Bohemian Rhapsody von Queen in den Charts?
+- Zeig mir das Backstage-Rider für Van Halen
+    - Hier gibt es diverse Probleme. Ist aber für die Demo nicht schlecht.
+- /mcp__StarAgent__concert_press_release Queen "Metronom Theater Oberhausen" 26.06.2026 "The show must go on!"
 -->
 
 ---
