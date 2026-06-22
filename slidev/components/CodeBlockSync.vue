@@ -6,7 +6,7 @@
 import './codeblocksync.css'
 import type { SharedState } from '@slidev/client'
 import { sharedState, useIsSlideActive, useSlideContext } from '@slidev/client'
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 
 interface LiveCodeBlockScrollPayload {
   codeBlockKey: string
@@ -45,11 +45,13 @@ let scrollVersionCounter = 0
 let selectionVersionCounter = 0
 let pollTimer: ReturnType<typeof setInterval> | null = null
 const applyingRemoteScroll = new Set<string>()
-const applyingRemoteSelection = new Set<string>()
 const latestRemoteScrollVersionByKey = new Map<string, number>()
 const cachedScrollPayloadByKey = new Map<string, LiveCodeBlockScrollPayload>()
 const latestRemoteSelectionVersionByKey = new Map<string, number>()
 const cachedSelectionPayloadByKey = new Map<string, LiveCodeBlockSelectionPayload>()
+
+/** Track element -> handler pairs for proper cleanup */
+const scrollListeners = new Map<HTMLElement, () => void>()
 
 function getWrappersOnSlide(): HTMLElement[] {
   const slideNode = document.querySelector(`.slidev-page[data-slidev-no="${slideNo.value}"]`)
@@ -123,54 +125,6 @@ function publishSelectionPayload(payload: LiveCodeBlockSelectionPayload): void {
   if (Number.isFinite(currentSlideNo))
     syncState.page = currentSlideNo
   syncState.liveCodeBlockSelection = payload
-}
-
-function getTextContentFromCodeBlock(wrapper: HTMLElement): string {
-  const codeEl = wrapper.querySelector('.slidev-code') as HTMLElement | null
-  if (!codeEl)
-    return ''
-  return codeEl.textContent || ''
-}
-
-function getTextOffsetFromSelection(selection: Selection, wrapper: HTMLElement): { anchor: number, focus: number } {
-  if (selection.rangeCount === 0)
-    return { anchor: 0, focus: 0 }
-
-  const range = selection.getRangeAt(0)
-  const codeEl = wrapper.querySelector('.slidev-code')
-  if (!codeEl)
-    return { anchor: 0, focus: 0 }
-
-  if (!codeEl.contains(range.commonAncestorContainer))
-    return { anchor: 0, focus: 0 }
-
-  // Calculate text offset by walking all text nodes
-  let anchorOffset = 0
-  let focusOffset = 0
-  let currentOffset = 0
-  let foundAnchor = false
-  let foundFocus = false
-
-  const walker = document.createTreeWalker(codeEl, NodeFilter.SHOW_TEXT)
-  let node: Node | null = walker.currentNode
-
-  while (node) {
-    const nodeLength = node.textContent?.length || 0
-
-    if (!foundAnchor && node === range.startContainer) {
-      anchorOffset = currentOffset + range.startOffset
-      foundAnchor = true
-    }
-    if (!foundFocus && node === range.endContainer) {
-      focusOffset = currentOffset + range.endOffset
-      foundFocus = true
-    }
-
-    currentOffset += nodeLength
-    node = walker.nextNode()
-  }
-
-  return { anchor: anchorOffset, focus: focusOffset }
 }
 
 function applySelectionFromOffsets(wrapper: HTMLElement, anchorOffset: number, focusOffset: number): void {
@@ -257,7 +211,6 @@ function applyRemoteScroll(wrapper: HTMLElement, payload: LiveCodeBlockScrollPay
     return
 
   applyingRemoteScroll.add(key)
-
   wrapper.scrollTop = payload.scrollTop
   wrapper.scrollLeft = payload.scrollLeft
 
@@ -270,63 +223,107 @@ function applyRemoteScroll(wrapper: HTMLElement, payload: LiveCodeBlockScrollPay
   setTimeout(() => applyingRemoteScroll.delete(key), 10)
 }
 
+/** Synchronous selection change handler. */
 function onSelectionChange(): void {
-  if (!isPresenter.value)
-    return
-  if (!syncState.liveCodeBlockSelection && !syncState.liveCodeBlockScroll)
+  if (!isPresenter.value || !isSlideActive.value)
     return
 
   const selection = window.getSelection()
-  if (!selection || selection.isCollapsed) {
-    // Clear selection
+  if (!selection)
+    return
+
+  const isCollapsed = selection.isCollapsed
+  const rangeCount = selection.rangeCount
+  const anchorNode = selection.anchorNode
+  const anchorOffset = selection.anchorOffset
+  const focusNode = selection.focusNode
+  const focusOffset = selection.focusOffset
+
+  if (isCollapsed) {
     const key = `${slideNo.value}:0`
-    const payload: LiveCodeBlockSelectionPayload = {
+    publishSelectionPayload({
       codeBlockKey: key,
       sourceId,
       version: nextSelectionVersion(),
       visible: false,
       anchorOffset: 0,
       focusOffset: 0,
-    }
-    publishSelectionPayload(payload)
+    })
     return
   }
+
+  if (rangeCount === 0)
+    return
 
   const wrappers = getWrappersOnSlide()
   for (const wrapper of wrappers) {
     const codeEl = wrapper.querySelector('.slidev-code')
-    if (codeEl && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      if (codeEl.contains(range.commonAncestorContainer)) {
-        const key = getCodeBlockKey(wrapper)
-        const offsets = getTextOffsetFromSelection(selection, wrapper)
-        const payload: LiveCodeBlockSelectionPayload = {
-          codeBlockKey: key,
-          sourceId,
-          version: nextSelectionVersion(),
-          visible: true,
-          anchorOffset: offsets.anchor,
-          focusOffset: offsets.focus,
-        }
-        publishSelectionPayload(payload)
-        break
+    if (!codeEl)
+      continue
+
+    if (!codeEl.contains(anchorNode) || !codeEl.contains(focusNode))
+      continue
+
+    let anchorTextOffset = -1
+    let focusTextOffset = -1
+    let currentOffset = 0
+
+    const walker = document.createTreeWalker(codeEl, NodeFilter.SHOW_TEXT)
+    let node: Node | null = walker.currentNode
+
+    while (node) {
+      const nodeLength = node.textContent?.length || 0
+      if (anchorTextOffset === -1 && node === anchorNode) {
+        anchorTextOffset = currentOffset + anchorOffset
       }
+      if (focusTextOffset === -1 && node === focusNode) {
+        focusTextOffset = currentOffset + focusOffset
+      }
+      if (anchorTextOffset !== -1 && focusTextOffset !== -1)
+        break
+      currentOffset += nodeLength
+      node = walker.nextNode()
     }
+
+    if (anchorTextOffset === -1 || focusTextOffset === -1)
+      continue
+
+    const key = getCodeBlockKey(wrapper)
+    publishSelectionPayload({
+      codeBlockKey: key,
+      sourceId,
+      version: nextSelectionVersion(),
+      visible: true,
+      anchorOffset: anchorTextOffset,
+      focusOffset: focusTextOffset,
+    })
+    break
   }
+}
+
+function addScrollListener(el: HTMLElement, handler: () => void): void {
+  if (scrollListeners.has(el))
+    return
+  el.addEventListener('scroll', handler, { passive: true })
+  scrollListeners.set(el, handler)
+}
+
+function removeScrollListeners(): void {
+  for (const [el, handler] of scrollListeners.entries()) {
+    el.removeEventListener('scroll', handler)
+  }
+  scrollListeners.clear()
 }
 
 function setupScrollSync(wrapper: HTMLElement): void {
   const key = getCodeBlockKey(wrapper)
-  if (!key)
-    return
-
   const handler = () => onWrapperScroll(wrapper, key)
-  wrapper.addEventListener('scroll', handler, { passive: true })
+
+  addScrollListener(wrapper, handler)
 
   const codeEls = wrapper.querySelectorAll<HTMLElement>('.slidev-code')
-  for (const codeEl of codeEls) {
-    codeEl.addEventListener('scroll', handler, { passive: true })
-  }
+  for (const codeEl of codeEls)
+    addScrollListener(codeEl, handler)
 
   const cached = cachedScrollPayloadByKey.get(key)
   if (cached && !isPresenter.value)
@@ -334,7 +331,8 @@ function setupScrollSync(wrapper: HTMLElement): void {
 }
 
 function setupSelectionSync(wrapper: HTMLElement): void {
-  const cached = cachedSelectionPayloadByKey.get(getCodeBlockKey(wrapper))
+  const key = getCodeBlockKey(wrapper)
+  const cached = cachedSelectionPayloadByKey.get(key)
   if (cached && !isPresenter.value && cached.visible) {
     applySelectionFromOffsets(wrapper, cached.anchorOffset, cached.focusOffset)
   }
@@ -348,24 +346,28 @@ function trackAllWrappers(): void {
   }
 }
 
-function startPolling(): void {
-  stopPolling()
-  trackAllWrappers()
-  pollTimer = setInterval(() => {
-    trackAllWrappers()
-  }, 100)
-}
-
-function stopPolling(): void {
+function startSync(): void {
+  removeScrollListeners()
   if (pollTimer) {
     clearInterval(pollTimer)
     pollTimer = null
   }
+
+  trackAllWrappers()
+  pollTimer = setInterval(() => {
+    if (isSlideActive.value)
+      trackAllWrappers()
+  }, 100)
+  document.addEventListener('selectionchange', onSelectionChange)
 }
 
-function cleanupAll(): void {
-  stopPolling()
-  document.removeEventListener('selectionchange', onSelectionChange as EventListener)
+function stopSync(): void {
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
+  document.removeEventListener('selectionchange', onSelectionChange)
+  removeScrollListeners()
 }
 
 function handleRemoteScrollPayload(payload?: LiveCodeBlockScrollPayload): void {
@@ -414,11 +416,10 @@ function handleRemoteSelectionPayload(payload?: LiveCodeBlockSelectionPayload): 
   for (const wrapper of wrappers) {
     const key = getCodeBlockKey(wrapper)
     if (key === payload.codeBlockKey) {
-      if (payload.visible) {
+      if (payload.visible)
         applySelectionFromOffsets(wrapper, payload.anchorOffset, payload.focusOffset)
-      } else {
+      else
         window.getSelection()?.removeAllRanges()
-      }
       return
     }
   }
@@ -439,28 +440,19 @@ const stopWatchingSelection = watch(
 const stopWatchingSlideActive = watch(
   isSlideActive,
   (active) => {
-    if (active) {
-      startPolling()
-      document.addEventListener('selectionchange', onSelectionChange as EventListener)
-    } else {
-      cleanupAll()
-    }
+    if (active)
+      startSync()
+    else
+      stopSync()
   },
   { immediate: true },
 )
-
-onMounted(() => {
-  if (isSlideActive.value) {
-    startPolling()
-    document.addEventListener('selectionchange', onSelectionChange as EventListener)
-  }
-})
 
 onBeforeUnmount(() => {
   stopWatchingScroll()
   stopWatchingSelection()
   stopWatchingSlideActive()
-  cleanupAll()
+  stopSync()
 })
 </script>
 

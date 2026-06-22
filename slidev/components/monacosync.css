@@ -19,3 +19,9 @@
     opacity: 0;
   }
 }
+
+.slidev-presenter .slidev-monaco-container:focus-within {
+  outline: 2px solid var(--brand-primary, #4c9aff);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
