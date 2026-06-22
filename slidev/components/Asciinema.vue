@@ -5,11 +5,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import {ref, computed, onMounted, onBeforeUnmount} from "vue";
 import RenderWhen from "@slidev/client/builtin/RenderWhen.vue";
 import * as AsciinemaPlayer from "asciinema-player";
 
-const props = defineProps(["src", "playerProps"]);
+const props = defineProps({
+  src: {type: String, required: true},
+  props: {type: Object, default: () => ({})},
+  markers: {type: Array, default: () => []},
+});
+
+const defaultProps = {
+  autoPlay: true,
+  fit: false,
+  idleTimeLimit: 5,
+  terminalFontFamily: 'Hack Nerd Font',
+  terminalFontSize: '13px',
+  controls: false,
+  pauseOnMarkers: false,
+};
+
+const mergedPlayerProps = computed(() => ({
+  ...defaultProps,
+  ...props.props,
+  ...(props.markers.length > 0 && {markers: props.markers})
+}));
 
 const playerContainer = ref(null);
 const player = ref(null);
@@ -26,7 +46,7 @@ const blurFocusedPlayerElement = () => {
     target &&
     target.contains(activeElement)
   ) {
-    activeElement.blur();
+    // activeElement.blur();
   }
 };
 
@@ -45,7 +65,7 @@ onMounted(() => {
   player.value = AsciinemaPlayer.create(
     props.src,
     target,
-    props.playerProps
+    mergedPlayerProps.value
   );
 
   target.addEventListener("pointerup", onPointerUp);
@@ -56,30 +76,31 @@ onMounted(() => {
       const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
 
       if (isVisible && !wasVisible.value && player.value) {
-        if (props.playerProps?.delayStart)
-          player.value.pause();
+        player.value.pause();
 
-        if (props.playerProps?.numberStartAt)
-          player.value.seek(props.playerProps.numberStartAt);
+        if (mergedPlayerProps.value?.numberStartAt)
+          player.value.seek(mergedPlayerProps.value.numberStartAt);
         else
           player.value.seek(0);
 
-        if (props.playerProps?.autoPlay) {
-          if (props.playerProps?.delayStart)
+        if (mergedPlayerProps.value?.autoPlay) {
+          if (mergedPlayerProps.value?.delayStart) {
             playDelayHandler.value = setTimeout(
               () => player.value.play(),
-              props.playerProps.delayStart * 1000
+              mergedPlayerProps.value.delayStart * 1000
             );
-          else
+          } else {
             player.value.play();
+          }
         }
       } else if (!isVisible && wasVisible.value && player.value) {
         player.value.pause();
         player.value.seek(0);
       }
+
       wasVisible.value = isVisible;
     },
-    { threshold: 0.1 }
+    {threshold: 0.1}
   );
 
   visibilityObserver.value.observe(target);
@@ -104,4 +125,10 @@ onBeforeUnmount(() => {
 
 <style>
 @import 'asciinema-player/dist/bundle/asciinema-player.css';
+
+.slidev-presenter .ap-player:focus-within {
+  outline: 2px solid var(--brand-primary, #4c9aff);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 </style>
