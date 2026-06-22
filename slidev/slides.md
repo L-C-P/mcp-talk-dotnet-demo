@@ -11,7 +11,7 @@ fonts:
     sans: Fira Sans
     serif: Cambria
 info: |
-    Business Line Meeting · "The Show must go on!" · 45 min · EN slides / DE spoken
+    Business Line Meeting · "The Show must go on!" · 60 min · EN slides / DE spoken
 drawings:
     persist: false
     presenterOnly: true
@@ -27,9 +27,7 @@ layout: cover
 hideInToc: true
 class: retro-tv-vcr
 background: "/assets/BLMeetingBackground.png"
-section:
-    title: Welcome
-    duration: 3m
+section: { title: Welcome, duration: 3m }
 ---
 
 # Business<br/>Line Meeting
@@ -60,7 +58,6 @@ hideInToc: true
 The Director Between AI and Enterprise Data
 
 <!--
-- Zeit: 2m
 - Kurz die Energie des Event-Themas aufgreifen: Heute sind wir alle Stars – und **StarAgent** managed die Tour.
 - Erwartung setzen: kein reiner Theorie-Vortrag. Am Ende läuft ein echter MCP-Server live.
 - Ziel benennen: Jede Person hier soll danach in der Lage sein, den Kommunikationsfluss zwischen LLM und MCP zu erklären – und wissen, wie sie selbst einen Server bauen kann.
@@ -78,9 +75,6 @@ hideInToc: true
 Architect, AI-Ambassador<br/>
 BL Microsoft, Hannover
 
-<!--
-- Zeit: 30s
--->
 
 ---
 layout: center
@@ -94,7 +88,6 @@ hideInToc: true
 <Toc :columns="2" :maxDepth="1" />
 
 <!--
-- Zeit: 30s
 - Die Präsentation gliedert sich in drei Teile:
   - Was ist "MCP"
   - Wie funktioniert "MCP"
@@ -105,7 +98,7 @@ hideInToc: true
 
 ---
 transition: slide-up
-section: { title: Why We Needed MCP, duration: 8m }
+section: { title: "Why MCP Matters", duration: 6m }
 ---
 
 # Why We Needed MCP
@@ -122,7 +115,6 @@ section: { title: Why We Needed MCP, duration: 8m }
 > MCP standardizes the contract between AI and the outside world.
 
 <!--
-- Zeit: 2 min
 - Pain Points aus dem eigenen Umfeld nennen: Wer hat schon mal einen eigenen Connector für ein LLM gebaut?
 - Analogie: Vor USB gab es für jedes Gerät einen anderen Stecker. MCP ist der USB-Standard für AI-Integrationen.
 - Herkunft: MCP wurde von **Anthropic** entwickelt und im **November 2024** als offener Standard veröffentlicht. Seitdem wird es von Microsoft, GitHub, Google und zahlreichen anderen Unternehmen aktiv unterstützt und weiterentwickelt.
@@ -148,7 +140,6 @@ zoom: 0.95
 | **Chrome DevTools**   | Live browser inspection, console, network, DOM |
 
 <!--
-- Zeit: 1 min
 - Hinweis: Die Verzeichnis-URLs sind später auf der Folie "Where to go next" aufgeführt.
 - **Überleitung:** was genau ist dieses Protokoll?
 -->
@@ -170,7 +161,6 @@ transition: slide-left
 > An open standard that defines how AI applications securely and structurally connect to tools and data sources.
 
 <!--
-- Zeit: 2 min
 - MCP als Protokoll einordnen, nicht als Bibliothek oder Framework.
 - JSON-RPC 2.0 hervorheben: Host und Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
 - Transport kurz erwähnen: lokal läuft es über stdio (Standard-Ein-/Ausgabe), remote über HTTP. Details kommen im Architektur-Diagramm.
@@ -179,6 +169,7 @@ transition: slide-left
 
 ---
 transition: fade
+section: { title: Architecture, duration: 5m }
 ---
 
 # MCP Architecture
@@ -199,7 +190,6 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 2 min
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
   - Client = Protokollschicht im Host
@@ -237,7 +227,6 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 1 min
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
   - Client = Protokollschicht im Host
@@ -281,7 +270,6 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 1 min
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
   - Client = Protokollschicht im Host
@@ -312,7 +300,6 @@ hideInToc: true
     - Completely independent of host and model
 
 <!--
-- Zeit: 0,5 min
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
   - Client = Protokollschicht im Host
@@ -321,6 +308,7 @@ hideInToc: true
 
 ---
 transition: slide-up
+section: { title: Capabilities, duration: 3m }
 ---
 
 # Capabilities: Tools, Resources, Prompts
@@ -334,7 +322,6 @@ transition: slide-up
 | **Prompt**   | Reusable prompt template with placeholders         | `concert_press_release` – generate a dramatic tour announcement |
 
 <!--
-- Zeit: 2 min
 - Die Semantik der drei Primitive präzise machen:
   - Tool = execute
   - Resource = read
@@ -358,14 +345,13 @@ hideInToc: true
 - **Prompt** → standardized, repeatable workflow the model should follow
 
 <!--
-- Zeit: 1 min
 - Governance-Hinweis: Die drei Primitiv-Typen haben unterschiedliche Risikoprofile – Tools können Seiteneffekte haben, Resources und Prompts sind read-only.
 - Dann kommen wir zu: **Wie funktioniert "MCP"**
 -->
 
 ---
 transition: slide-up
-section: { title: How LLM and MCP Actually Talk, duration: 2m }
+section: { title: Runtime, duration: 3m }
 ---
 
 # How LLM and MCP Actually Talk
@@ -390,7 +376,6 @@ The MCP server never knows which LLM or client is on the other end.
 One server works with every MCP-compatible host – the host handles the translation.
 
 <!--
-- Zeit: 2 min
 - Kernbotschaft deutlich machen: LLM und MCP-Server sprechen **nie direkt** miteinander. Der Host ist immer der Vermittler und die Kontrollinstanz.
 - JSON-RPC 2.0 ist kein Hexenwerk – es sind strukturierte Textnachrichten mit `method`, `params` und `result`.
 - Auf Git folgen weitere Folien, mit detalierteren Beschreibungen.
@@ -621,7 +606,7 @@ hideInToc: true
 
 ---
 transition: slide-left
-section: { title: MCP SDK / Program.cs, duration: 6m }
+section: { title: Implementation, duration: 15m }
 ---
 
 # Microsoft MCP SDK for .NET
@@ -646,7 +631,6 @@ dotnet add package ModelContextProtocol
 ```
 
 <!--
-- Zeit: 2 min
 - SDK einordnen: War gerade noch Preview-Paket. Jetzt Version 1.4.
 - **Überleitung:** Genug geredet, wir erstellen das StarAgent Projekt.
 -->
@@ -658,10 +642,6 @@ layout: terminal
 ---
 
 <Asciinema src="/assets/casts/createproject.cast"/>
-
-<!--
-- Zeit: 1 min
--->
 
 ---
 layout: codeeditor
@@ -767,7 +747,6 @@ hideInToc: true
 
 ---
 transition: slide-left
-section: { title: "Tools, Resources, Prompts", duration: 5m }
 ---
 
 ### Demo capabilities
@@ -777,7 +756,6 @@ section: { title: "Tools, Resources, Prompts", duration: 5m }
 - Prompt: `concert_press_release`
 
 <!--
-- Zeit: 8 min
 - Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
 - Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
 - `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
@@ -838,7 +816,6 @@ public static class ChartTools
 
 ```
 
-- Zeit: 2 min
 - Attribute-Ansatz betonen: Wer .NET kennt, fühlt sich sofort zu Hause. Kein Boilerplate, kein manuelles JSON-Parsing.
 - Description-Attribute sind entscheidend: Sie landen direkt im Tool-Schema, das das LLM sieht. Je klarer die Description, desto besser die Tool-Auswahl durch das Modell.
 -->
@@ -851,6 +828,7 @@ hideFor: live
 
 > // ChartTools.cs
 
+<CodeBlockSync />
 <<< @/snippets/ChartTools.cs {maxHeight: '440px'}
 
 ---
@@ -911,7 +889,7 @@ transition: slide-left
 > // McpServerPromptType.cs
 
 <CodeBlockSync />
-> <<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
+<<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
 
 <!--
 - Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden.
@@ -943,14 +921,12 @@ transition: slide-left
 ```
 
 <!--
-- Zeit: 1 min
 - **Überleitung:** Wir nutzen den MCP.
 -->
 
 ---
 layout: center
 transition: none
-section: { duration: 6m }
 ---
 
 # Demo
@@ -964,7 +940,6 @@ layout: terminal
 <Asciinema src="/assets/casts/mcp.cast" />
 
 <!--
-- Zeit: 5 min
 - Claude erkennt den MCP automatisch.
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
 - Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley" generieren lassen.
@@ -1010,13 +985,12 @@ var result = await client.CallToolAsync("get_chart_position",
 ```
 
 <!--
-- Zeit: 1 min
 - Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
 -->
 
 ---
 transition: slide-left
-section: { title: HTTP & Functions, duration: 2m }
+section: { title: "Deployment Options", duration: 5m }
 ---
 
 # HTTP Transport: Reference
@@ -1082,7 +1056,6 @@ transition: slide-left
 ```
 
 <!--
-- Zeit: 2 min
 - Folie ist reine Referenz – kein Live-Coding hier.
 - Hauptaussage: Die Tool-/Resource-/Prompt-Implementierungen bleiben 1:1 identisch. Nur `Program.cs` ändert sich.
 - `Stateless = true` passt perfekt zu serverless-Deployments wie Azure Functions (kommt gleich).
@@ -1133,7 +1106,6 @@ await host.RunAsync();
 ```
 
 <!--
-- Zeit: 2 min
 - Azure Functions isolated worker ist das moderne Modell (.NET 8 / .NET 10) – nicht den älteren in-process-Host verwenden.
 - Die Tool-/Resource-/Prompt-Klassen bleiben identisch zu stdio und ASP.NET Core – nur der Host-Wrapper ändert sich.
 - `McpServerHttpHandler` ist die abstrakte Komponente, die HTTP-Request/-Response in das MCP-Protokoll übersetzt. Exakter API-Name kann je nach SDK-Version variieren – vor dem Event prüfen.
@@ -1145,7 +1117,7 @@ await host.RunAsync();
 ---
 transition: slide-up
 zoom: 0.95
-section: { title: Current Developments, duration: 8m }
+section: { title: Outlook, duration: 5m }
 ---
 
 # Current Developments: MCP Auto-Discovery
@@ -1179,7 +1151,6 @@ section: { title: Current Developments, duration: 8m }
 ```
 
 <!--
-- Zeit: 2 min
 - Einordnung: Das ist Stand 2025/2026 – aktiv in Entwicklung, noch nicht überall implementiert.
 - SEP-1649-Analogie: Kennt ihr `robots.txt`? Ein Agent besucht eine Website und schaut nach `/.well-known/mcp.json` – und findet damit automatisch alle MCP-Fähigkeiten dieser Domain. Kein zentrales Verzeichnis nötig.
 - Registry-Analogie: Wie der App Store. Der MCP-Server meldet sich einmal an, und alle Clients können ihn über die Registry finden.
@@ -1201,7 +1172,6 @@ flowchart LR
 ```
 
 <!--
-- Zeit: 1 min
 - Praxishinweis: Wer heute einen MCP-Server baut, sollte `/.well-known/mcp.json` schon vorsehen – der Aufwand ist minimal, der Zukunftswert groß.
 -->
 
@@ -1222,7 +1192,6 @@ transition: slide-left
 - **Start small:** one tool · one server · connect to your host
 
 <!--
-- Zeit: 2 min
 - Kernbotschaften nochmal kurz zusammenfassen – nicht vorlesen, sondern in eigenen Worten.
 - Wichtigste Botschaft für Entwickelnde: Es ist weniger Aufwand als gedacht. Attribute drauf, DI fertig, Server läuft.
 - Wichtigste Botschaft für Nichtentwickelnde: MCP schafft eine klare, auditierbare Grenze zwischen dem LLM und euren Systemen. Das ist gut für Governance und Sicherheit.
@@ -1244,7 +1213,6 @@ transition: slide-left
 | NuGet package                     | `nuget.org/packages/ModelContextProtocol`                    |
 
 <!--
-- Zeit: 1 min
 - **Überleitung:** Q&A öffnen.
 -->
 
@@ -1253,7 +1221,7 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
-section: { duration: 15m, buffer: 15m }
+section: { title: "Q&A", duration: 15m, buffer: 15m }
 ---
 
 # Q&A
@@ -1263,7 +1231,6 @@ transition: slide-up
 hideInToc: true
 layout: cover
 background: "/assets/BLMeetingBackground.png"
-section: { title: Bye, duration: 1m }
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />
@@ -1271,7 +1238,6 @@ section: { title: Bye, duration: 1m }
 <img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-40">
 
 <!--
-- Zeit: 1 min
 - Demo-Repo oder Slides-Link zum Nachschlagen kommunizieren.
 -->
 
