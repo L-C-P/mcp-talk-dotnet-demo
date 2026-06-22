@@ -58,7 +58,7 @@ public static class RiderDataService
         ["queen"] =
             """
             {
-              "artist": "Queen Tribute Band",
+              "artist": "Queen",
               "stageRequirements": [
                 "Grand piano (tuned on show day)",
                 "Four vocal mics with backup channels",
