@@ -200,11 +200,13 @@ function applyRemoteState(payload) {
   })
 }
 
-const stopWatchingSync = watch(
-  () => sharedState.liveAsciinemaPlayer,
-  payload => applyRemoteState(payload),
-  { immediate: true, deep: true },
-)
+// TEMPORARY: built-in sync disabled.
+// const stopWatchingSync = watch(
+//   () => sharedState.liveAsciinemaPlayer,
+//   payload => applyRemoteState(payload),
+//   { immediate: true, deep: true },
+// )
+const stopWatchingSync = () => {}
 
 // --- Focus / blur helpers (unchanged) ---
 const blurFocusedPlayerElement = () => {
@@ -238,10 +240,11 @@ onMounted(() => {
     mergedPlayerProps.value
   );
 
+  // TEMPORARY: built-in sync disabled.
   // Register presenter-side event listeners
-  player.value.addEventListener('play', onPlayerPlay);
-  player.value.addEventListener('playing', onPlayerPlay);
-  player.value.addEventListener('pause', onPlayerPause);
+  // player.value.addEventListener('play', onPlayerPlay);
+  // player.value.addEventListener('playing', onPlayerPlay);
+  // player.value.addEventListener('pause', onPlayerPause);
 
   target.addEventListener("pointerup", onPointerUp);
   target.addEventListener("focusin", onFocusIn);
@@ -280,10 +283,11 @@ onMounted(() => {
 
   visibilityObserver.value.observe(target);
 
+  // TEMPORARY: built-in sync disabled.
   // If a remote state was cached before the player was ready, apply it now
-  if (cachedRemotePayload && !isPresenter.value) {
-    applyRemoteState(cachedRemotePayload);
-  }
+  // if (cachedRemotePayload && !isPresenter.value) {
+  //   applyRemoteState(cachedRemotePayload);
+  // }
 });
 
 onBeforeUnmount(() => {
