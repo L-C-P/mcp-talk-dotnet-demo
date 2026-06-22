@@ -101,7 +101,7 @@ transition: slide-up
 section: { title: "Why MCP Matters", duration: 6m }
 ---
 
-# Why We Needed MCP
+# Why MCP Matters
 
 ### The world before MCP
 
@@ -126,7 +126,7 @@ transition: slide-left
 zoom: 0.95
 ---
 
-# Useful MCP Servers: Practical Examples
+# Useful MCP Servers
 
 | Server                | What it exposes                                |
 |-----------------------|------------------------------------------------|
@@ -148,12 +148,13 @@ zoom: 0.95
 transition: slide-left
 ---
 
-# What Is MCP?
+# What Is MCP
 
-### Model Context Protocol (MCP)
+### Model Context Protocol
 
 - **Wire protocol:** JSON-RPC 2.0 – both sides speak structured text
 - **Capability model:** Tools · Resources · Prompts
+    - *Tasks, MCP Apps, Elicitation, Structured Output, Resource Links, OAuth 2.1, Sampling, Streamable HTTP*
 - **Lifecycle management:** connection setup, capability discovery, invocation, teardown
 - **Interoperability:** one server works with any MCP-compatible host
 - **Transports:** `stdio` for local processes · `Streamable HTTP` for remote services
@@ -163,6 +164,16 @@ transition: slide-left
 <!--
 - MCP als Protokoll einordnen, nicht als Bibliothek oder Framework.
 - JSON-RPC 2.0 hervorheben: Host und Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
+- Neue Features:
+    - *Tasks (asynchrone Ausführung)*
+    - ~~MCP Apps (UI-Rendering)~~
+    - Elicitation (Server fragt User)
+    - Structured Output
+    - Resource Links
+    - OAuth 2.1 / Authorization
+    - Sampling (Server → LLM)
+    - Streamable HTTP / SSE-Resumability (Client reconnect)
+    
 - Transport kurz erwähnen: lokal läuft es über stdio (Standard-Ein-/Ausgabe), remote über HTTP. Details kommen im Architektur-Diagramm.
 - Interoperabilität betonen: ein MCP-Server in .NET funktioniert mit GitHub Copilot, Claude Desktop, VS Code und jedem anderen MCP-Host.
 -->
@@ -205,7 +216,7 @@ transition: fade
 hideInToc: true
 ---
 
-# MCP Architecture
+# Architecture: Multiple Servers
 
 ```mermaid {scale: 0.65}
 flowchart LR
@@ -242,7 +253,7 @@ transition: slide-up
 hideInToc: true
 ---
 
-# MCP Architecture
+# Architecture: Local + Remote
 
 ```mermaid {scale: 0.65}
 flowchart LR
@@ -285,7 +296,7 @@ transition: slide-left
 hideInToc: true
 ---
 
-# MCP Architecture
+# Architecture: Roles
 
 ### Three roles – clear responsibilities
 
@@ -311,7 +322,7 @@ transition: slide-up
 section: { title: Capabilities, duration: 3m }
 ---
 
-# Capabilities: Tools, Resources, Prompts
+# Capabilities
 
 ### Three primitives – three distinct concerns
 
@@ -336,9 +347,7 @@ transition: slide-left
 hideInToc: true
 ---
 
-# Capabilities: Tools, Resources, Prompts
-
-### Decision guide
+# Capabilities: Decision Guide
 
 - **Tool** → the model needs to _do_ something or fetch dynamic data
 - **Resource** → stable, readable document or data set (like a file or config)
@@ -346,7 +355,6 @@ hideInToc: true
 
 <!--
 - Governance-Hinweis: Die drei Primitiv-Typen haben unterschiedliche Risikoprofile – Tools können Seiteneffekte haben, Resources und Prompts sind read-only.
-- Dann kommen wir zu: **Wie funktioniert "MCP"**
 -->
 
 ---
@@ -354,9 +362,9 @@ transition: slide-up
 section: { title: Runtime, duration: 3m }
 ---
 
-# How LLM and MCP Actually Talk
+# Runtime: Host as Translator
 
-### The LLM never sees MCP – the host is the translator
+### The LLM never sees MCP
 
 The **host** is embedded in the client application (Claude Code, Warp, GitHub Copilot, …).
 It knows two languages: **MCP** on one side, and the **LLM's native format** on the other.
@@ -560,9 +568,9 @@ hideInToc: true
 transition: slide-up
 ---
 
-# Discovery & Runtime Sequence
+# Runtime Sequence
 
-### End-to-end runtime flow
+### End-to-end flow
 
 ```mermaid {scale: 0.6}
 sequenceDiagram
@@ -585,7 +593,6 @@ sequenceDiagram
 - Lifecycle-Tabelle nur kurz streifen: Diese Calls gibt es, der Host verwaltet sie automatisch. Man muss sie nicht selbst implementieren – **das SDK erledigt das**.
 - Sequenzdiagramm ist das Herzstück: Hier wird sichtbar, dass der Host die Kontrolle behält. Das LLM macht einen Vorschlag (Tool Call), aber der Host entscheidet, ob er ausgeführt wird.
 - Wichtige Botschaft: Der Host ist die Sicherheitsinstanz – nicht das LLM.
-- Punchline zum Diagramm: Das letzte Ergebnis – „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
 -->
 
 ---
@@ -594,9 +601,9 @@ hideFor: live
 hideInToc: true
 ---
 
-# Discovery & Runtime Sequence
+# Lifecycle Calls
 
-### MCP lifecycle calls (for reference)
+### For reference
 
 | Phase      | Call                                             | Direction       |
 |------------|--------------------------------------------------|-----------------|
@@ -605,13 +612,22 @@ hideInToc: true
 | Invocation | `tools/call` · `resources/read` · `prompts/get`  | Client → Server |
 
 ---
+layout: section
 transition: slide-left
-section: { title: Implementation, duration: 15m }
+background: "/assets/SectionBackground.png"
+hideInToc: true
 ---
 
-# Microsoft MCP SDK for .NET
+# Implementation
 
-### Getting started – three options
+---
+transition: slide-left
+section: { title: Implementation, duration: 12m }
+---
+
+# .NET SDK
+
+### Getting started
 
 **Option A: Project template (recommended for new projects)**
 
@@ -636,7 +652,7 @@ dotnet add package ModelContextProtocol
 -->
 
 ---
-title: "Demo: Projekt erstellen"
+title: "Create Project"
 transition: slide-left
 layout: terminal
 ---
@@ -725,21 +741,12 @@ hideInToc: true
 
 ---
 layout: codeeditor
-transition: none
-hideInToc: true
----
-
-> // Program.cs
-<<< @/snippets/Program.cs {18}
-
----
-layout: codeeditor
 transition: slide-left
 hideInToc: true
 ---
 
 > // Program.cs
-<<< @/snippets/Program.cs
+<<< @/snippets/Program.cs {18}
 
 <!--
 - **Überleitung:** Was implementieren wir in der Demo
@@ -756,13 +763,8 @@ transition: slide-left
 - Prompt: `concert_press_release`
 
 <!--
-- Reihenfolge live: zuerst Program.cs zeigen und erklären, dann die drei Klassen nacheinander implementieren.
-- Logging-Hinweis: Bei stdio läuft die Protokollkommunikation über stdout. Logging immer auf stderr oder in eine Datei umleiten, damit keine Lognachrichten das Protokoll stören.
-- `WithToolsFromAssembly()` / `WithResourcesFromAssembly()` / `WithPromptsFromAssembly()` – alle Klassen mit den entsprechenden Attributen im Assembly werden automatisch registriert.
-- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden und live eine Chart-Abfrage und einen Rider-Abruf zeigen.
-- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms“ live im Chat auftauchen lassen. 🤘
-- Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley“ generieren lassen.
-- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
+- Drei Klassen nacheinander implementieren.
+- Punchline zum Diagramm: Das letzte Ergebnis – „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
 -->
 
 ---
@@ -774,7 +776,7 @@ layout: terminal
 <Asciinema src="/assets/casts/projectstructure.cast"/>
 
 <!--
-- Ich habe da schonmal etwas vorbereitet…
+- Kurz die Magie der Demo erklären: Ich habe da schonmal etwas vorbereitet…
 - **Überleitung:** Schauen wir uns die Projektstruktur an – drei Klassen für Tools, Resources und Prompts. Alle sind komplett leer – wir füllen sie gleich live.
 -->
 
@@ -891,16 +893,12 @@ transition: slide-left
 <CodeBlockSync />
 <<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
 
-<!--
-- Nach dem Bauen: Server im MCP-Host (z. B. VS Code / Claude Desktop) einbinden.
--->
-
 ---
 title: Register MCP
 transition: slide-left
 ---
 
-# Register the server in your MCP host (`mcp.json`)
+# Register: stdio
 
 ### Development with stdio transport
 
@@ -921,29 +919,38 @@ transition: slide-left
 ```
 
 <!--
-- **Überleitung:** Wir nutzen den MCP.
+- Jetzt den MCP in der Konfiguration hinzufügen.
+- ClaudeCode erkennt den MCP automatisch (.mcp/server.json).
 -->
 
 ---
 layout: center
 transition: none
+section: { title: Demo, duration: 5m }
 ---
 
 # Demo
+
+<!--
+- **Überleitung:** Wir nutzen den MCP-Server.
+- Claude erkennt MCP automatisch
+- Wo steht Bohemian Rhapsody von Queen in den Charts?
+- Zeig mir das Backstage-Rider für Van Halen
+- Erstelle eine Pressemeldung für das Queen-Konzert am 26.06.2026 im Metronom Theater Oberhausen
+-->
 
 ---
 hideInToc: true
 transition: slide-left
 layout: terminal
+hide: true
 ---
 
 <Asciinema src="/assets/casts/mcp.cast" />
 
 <!--
-- Claude erkennt den MCP automatisch.
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
 - Prompt zeigen: `concert_press_release` aufrufen, dramatische Pressemitteilung für „Queen Tribute Band at Wembley" generieren lassen.
-- Debug-Tipp für stdio: MCP Inspector via `npx @modelcontextprotocol/inspector` – öffnet eine Browser-UI zum manuellen Testen der Tools, Resources und Prompts ohne Host.
 -->
 
 ---
@@ -961,17 +968,16 @@ transition: slide-left
     - Resources
     - Prompts
     - Tools
-- Hinweis auf neues Features:
+- Neu:
     - Tasks
     - Apps
-    - ...
+    - Usw.
 
-Dazu wird Lukas Beerschwinger noch einen Talk in der Brownbacksession halten.
+Zu einigen Punkten (z.B. Apps) wird Lukas Beerschwinger noch einen Talk in der Brownbacksession halten.
 -->
 
 ---
 transition: slide-left
-hideFor: live
 ---
 
 # Host-side: discover and invoke
@@ -985,27 +991,25 @@ var result = await client.CallToolAsync("get_chart_position",
 ```
 
 <!--
-- Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
+- Das SDK kann MCP-Server auch nutzen: Host-Seite zeigen: ListToolsAsync gibt die Discovery zurück, CallToolAsync führt aus. Genau das, was wir als JSON-RPC gesehen haben – jetzt als typisierter .NET-Aufruf.
 -->
 
 ---
 transition: slide-left
-section: { title: "Deployment Options", duration: 5m }
+section: { title: "Deployment Options", duration: 3m }
 ---
 
 # HTTP Transport: Reference
 
 ### From stdio to Streamable HTTP – minimal changes
 
-**NuGet:** `ModelContextProtocol.AspNetCore`
-
 ```shell
 dotnet add package ModelContextProtocol.AspNetCore
 ```
 
-**Server (`Program.cs`)**
+> // Program.cs
 
-```csharp {monaco-diff}  {height:'250px'}
+```csharp {monaco-diff}  {height:'270px'}
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
@@ -1033,14 +1037,19 @@ app.MapMcp();
 await app.RunAsync("http://localhost:3001");
 ```
 
+<!--
+- Folie ist reine Referenz – kein Live-Coding hier.
+- Hauptaussage: Die Tool-/Resource-/Prompt-Implementierungen bleiben 1:1 identisch. Nur `Program.cs` ändert sich.
+- Auth-Hinweis: Bei HTTP-Transport ist Authentifizierung Pflicht in Produktion. Typisch: Azure AD, API-Keys oder OAuth.
+-->
+
 ---
-title: Register MCP
 transition: slide-left
 ---
 
-# Register the server in your MCP host
+# Register: HTTP
 
-### Development with http transport
+### Development with HTTP transport
 
 **Connect a host via `mcp.json`**
 
@@ -1055,64 +1064,75 @@ transition: slide-left
 }
 ```
 
-<!--
-- Folie ist reine Referenz – kein Live-Coding hier.
-- Hauptaussage: Die Tool-/Resource-/Prompt-Implementierungen bleiben 1:1 identisch. Nur `Program.cs` ändert sich.
-- `Stateless = true` passt perfekt zu serverless-Deployments wie Azure Functions (kommt gleich).
-- `app.MapMcp()` registriert den `/mcp`-Endpunkt – analog zu `app.MapControllers()` oder `app.MapHub()`.
-- Auth-Hinweis: Bei HTTP-Transport ist Authentifizierung Pflicht in Produktion. Typisch: Azure AD, API-Keys oder OAuth.
-- Sampling erklären: Sampling ist der umgekehrte Weg – normalerweise ruft der Host/Client den Server auf. Beim Sampling dreht der Server den Spieß um und bittet seinerseits den Host, das LLM mit einer bestimmten Anfrage aufzurufen und das Ergebnis zurückzugeben. Beispiel: Ein Tool läuft und merkt, dass es zusätzlichen Kontext vom Modell braucht, und löst über den Host eine neue LLM-Anfrage aus – ohne dass der Nutzer direkt eingreifen muss. Das funktioniert nur mit einer persistenten Verbindung (stdio oder HTTP stateful).
--->
-
 ---
 transition: slide-up
 ---
 
-# MCP on Azure Functions
+# Azure Function: Reference
 
-### Hosting an MCP server serverless – Azure Functions (isolated worker)
+### Serverless hosting
 
-**NuGet packages**
-
-```shell
-dotnet add package ModelContextProtocol
-dotnet add package Microsoft.Azure.Functions.Worker
-dotnet add package Microsoft.Azure.Functions.Worker.Extensions.Http
-```
-
----
-transition: slide-left
----
-
-**`Program.cs` – DI registration**
+> // Program.cs
 
 ```csharp
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ModelContextProtocol.Server;
 
-var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
-    .ConfigureServices(services =>
-    {
-        services.AddMcpServer()
-            .WithToolsFromAssembly()
-            .WithResourcesFromAssembly()
-            .WithPromptsFromAssembly();
-    })
-    .Build();
+FunctionsApplicationBuilder builder = FunctionsApplication.CreateBuilder(args);
 
-await host.RunAsync();
+builder.ConfigureFunctionsWebApplication();
+
+builder.Services
+       .AddApplicationInsightsTelemetryWorkerService()
+       .ConfigureFunctionsApplicationInsights();
+
+await builder.Build().RunAsync();
+
 ```
 
 <!--
 - Azure Functions isolated worker ist das moderne Modell (.NET 8 / .NET 10) – nicht den älteren in-process-Host verwenden.
 - Die Tool-/Resource-/Prompt-Klassen bleiben identisch zu stdio und ASP.NET Core – nur der Host-Wrapper ändert sich.
 - `McpServerHttpHandler` ist die abstrakte Komponente, die HTTP-Request/-Response in das MCP-Protokoll übersetzt. Exakter API-Name kann je nach SDK-Version variieren – vor dem Event prüfen.
-- Stateless-Transport-Hinweis: Azure Functions sind zustandslos – das passt direkt zu `Stateless = true` im MCP HTTP-Transport.
+- Stateless-Transport-Hinweis: Azure Functions sind zustandslos. Damit ist kein Sampling möglich.
 - Produktionsrelevanz: Viele Enterprise-Teams, die bereits Functions nutzen, können so MCP-Fähigkeiten mit minimaler Infrastruktur exposieren.
 - Auth: Function-Keys für einfache Szenarien, Azure AD für Unternehmensumgebungen.
 -->
+
+---
+transition: slide-left
+hideInToc: true
+---
+
+# Azure Function
+
+> // McpToolFunctions.cs
+
+```csharp
+[Function(nameof(GetChartPosition))]
+public ChartResult GetChartPosition([McpToolTrigger("get_chart_position", "Returns the chart position of a song on a given chart.")] ToolInvocationContext context,
+                                    [McpToolProperty("songTitle", "Song title", true)] string songTitle,
+                                    [McpToolProperty("artist", "Artist name", true)] string artist,
+                                    [McpToolProperty("chart", "Chart name")] string? chart)
+{
+    string resolvedChart = string.IsNullOrWhiteSpace(chart)
+        ? "Billboard Hot 100"
+        : chart;
+
+    return ChartDataService.Lookup(songTitle, artist, resolvedChart);
+}
+```
+
+---
+layout: section
+transition: slide-left
+background: "/assets/SectionBackground.png"
+hideInToc: true
+---
+
+# Outlook
 
 ---
 transition: slide-up
@@ -1120,7 +1140,7 @@ zoom: 0.95
 section: { title: Outlook, duration: 5m }
 ---
 
-# Current Developments: MCP Auto-Discovery
+# Auto-Discovery
 
 ### `/.well-known/mcp.json` — SEP-1649 (decentralised)
 
@@ -1161,7 +1181,7 @@ section: { title: Outlook, duration: 5m }
 transition: slide-left
 ---
 
-# Discovery models in parallel
+# Discovery Models
 
 ```mermaid
 flowchart LR
@@ -1182,10 +1202,8 @@ transition: slide-left
 # Key Takeaways
 
 - **MCP standardizes AI-to-system integration** – one protocol, any host, any model
-- **Three primitives – three concerns:**
-    - `Tool` → execute (dynamic, side effects possible)
-    - `Resource` → read (stable URI, read-only)
-    - `Prompt` → orchestrate (reusable template)
+- **Capabilities & features:** `Tool` · `Resource` · `Prompt` · `Tasks` · `Elicitation` · `Structured Output` ·
+  `Resource Links` · `OAuth 2.1` · `Sampling` · `Streamable HTTP`
 - **The host is the control layer** – the LLM proposes, the host decides
 - **Transport is a deployment decision** – stdio locally, HTTP remotely, Functions serverlessly
 - **Auto-discovery is coming** – `/.well-known/mcp.json` and central registries
@@ -1221,7 +1239,7 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
-section: { title: "Q&A", duration: 15m, buffer: 15m }
+section: { title: "Q&A", duration: 14m }
 ---
 
 # Q&A
@@ -1231,6 +1249,7 @@ transition: slide-up
 hideInToc: true
 layout: cover
 background: "/assets/BLMeetingBackground.png"
+section: { title: "Bye", duration: 1m }
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />
