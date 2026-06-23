@@ -364,6 +364,7 @@ hideInToc: true
 
 ---
 transition: slide-left
+hideInToc: true
 zoom: 0.65
 ---
 
@@ -619,6 +620,7 @@ hideInToc: true
 
 ---
 transition: slide-up
+hideInToc: true
 ---
 
 # Runtime Sequence
@@ -714,6 +716,7 @@ title: "Program.cs"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – Usings & Builder"
 ---
 
@@ -724,6 +727,7 @@ title: "Program.cs – Usings & Builder"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – Logging to stderr"
 ---
 
@@ -738,6 +742,7 @@ title: "Program.cs – Logging to stderr"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – MCP Services"
 ---
 
@@ -748,6 +753,7 @@ title: "Program.cs – MCP Services"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – AddMcpServer()"
 ---
 
@@ -762,6 +768,7 @@ title: "Program.cs – AddMcpServer()"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – stdio Transport"
 ---
 
@@ -776,6 +783,7 @@ title: "Program.cs – stdio Transport"
 layout: codeeditor
 transition: none
 hideInToc: true
+showFor: live
 title: "Program.cs – Register Capabilities"
 ---
 
@@ -792,6 +800,7 @@ title: "Program.cs – Register Capabilities"
 layout: codeeditor
 transition: slide-left
 hideInToc: true
+showFor: live
 title: "Program.cs – Build & Run"
 ---
 
@@ -1139,6 +1148,7 @@ await app.RunAsync("http://localhost:3001");
 
 ---
 transition: slide-left
+hideInToc: true
 ---
 
 # Register: HTTP
@@ -1270,6 +1280,7 @@ zoom: 0.88
 
 ---
 transition: slide-up
+hideInToc: true
 ---
 
 # Discovery Models
@@ -1407,6 +1418,7 @@ section: { title: "Bye", duration: 1m }
 zoom: 1.7
 layout: terminal
 hideFor: live
+hideInToc: true
 title: "Bonus"
 ---
 

@@ -3,6 +3,8 @@
 ## Setup
 
 - `npm install`
+- `npm run dev` — for local development
+- `npm run live` — for live presentations with audience interaction
 
 ## Scripts
 
