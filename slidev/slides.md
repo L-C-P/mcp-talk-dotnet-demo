@@ -658,7 +658,7 @@ transition: slide-left
 layout: terminal
 ---
 
-<Asciinema src="/assets/casts/createproject.cast"/>
+<Asciinema src="/public/assets/casts/createproject.cast"/>
 
 ---
 layout: codeeditor
@@ -765,7 +765,8 @@ transition: slide-left
 
 <!--
 - Drei Klassen nacheinander implementieren.
-- Punchline zum Diagramm: Das letzte Ergebnis – „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
+- Punchline: „Bohemian Rhapsody ist #1 – wie immer“ – ist unser Mock-Verhalten für die Demo. Kommt gleich live.
+- book_venue nutzt elicitation.
 -->
 
 ---
@@ -774,7 +775,7 @@ transition: slide-left
 layout: terminal
 ---
 
-<Asciinema src="/assets/casts/projectstructure.cast"/>
+<Asciinema src="/public/assets/casts/projectstructure.cast"/>
 
 <!--
 - Kurz die Magie der Demo erklären: Ich habe da schonmal etwas vorbereitet…
@@ -943,7 +944,7 @@ layout: terminal
 hide: true
 ---
 
-<Asciinema src="/assets/casts/mcp.cast" />
+<Asciinema src="/public/assets/casts/mcp.cast" />
 
 <!--
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
@@ -1266,4 +1267,4 @@ layout: terminal
 hideFor: live
 ---
 
-<Asciinema src="/assets/casts/sw.cast"/>
+<Asciinema src="/public/assets/casts/sw.cast"/>
