@@ -2,6 +2,9 @@ import { defineAppSetup } from '@slidev/types'
 import { slides } from '#slidev/slides'
 
 export default defineAppSetup(({ router }) => {
+  const normalizePresenterPath = (path: string) => {
+    return path.replace(/^\/presenter\/(?:presenter\/)+/, '/presenter/')
+  }
 
   const getPresenterSlideId = (path: string) => {
     const match = path.match(/\/presenter\/([^/?#]+)/)
@@ -102,6 +105,18 @@ export default defineAppSetup(({ router }) => {
   const schedulePresenterTimerStop = () => {
     schedulePresenterTimerControl('stop')
   }
+  router.beforeEach((to) => {
+    const normalizedPath = normalizePresenterPath(to.path)
+    if (normalizedPath === to.path)
+      return true
+
+    return {
+      path: normalizedPath,
+      query: to.query,
+      hash: to.hash,
+      replace: true,
+    }
+  })
 
   router.afterEach((to, from) => {
     const toSlide = getPresenterSlideNo(to.path)
