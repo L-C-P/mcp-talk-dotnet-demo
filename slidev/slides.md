@@ -153,8 +153,8 @@ transition: slide-left
 ### Model Context Protocol
 
 - **Wire protocol:** JSON-RPC 2.0 – both sides speak structured text
-- **Capability model:** Tools · Resources · Prompts
-    - *Tasks, MCP Apps, Elicitation, Structured Output, Resource Links, OAuth 2.1, Sampling, Streamable HTTP*
+- **Capability model:** Tools · Resources · Prompts, Tasks, MCP Apps, Elicitation, Structured Output, Resource Links,
+  OAuth 2.1, Sampling, Streamable HTTP
 - **Lifecycle management:** connection setup, capability discovery, invocation, teardown
 - **Interoperability:** one server works with any MCP-compatible host
 - **Transports:** `stdio` for local processes · `Streamable HTTP` for remote services
@@ -164,11 +164,11 @@ transition: slide-left
 <!--
 - MCP als Protokoll einordnen, nicht als Bibliothek oder Framework.
 - JSON-RPC 2.0 hervorheben: Host und Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
+- Alte Feastures: Tools, Resources,Prompts
 - Neue Features:
     - *Tasks (asynchrone Ausführung)*
     - ~~MCP Apps (UI-Rendering)~~
     - Elicitation (Server fragt User)
-        - Aktuell nur VS Code / GitHub Copilot
     - Structured Output
     - Resource Links
     - OAuth 2.1 / Authorization
@@ -181,7 +181,7 @@ transition: slide-left
 
 ---
 transition: fade
-section: { title: Architecture, duration: 5m }
+section: { title: Architecture, duration: 8m }
 ---
 
 # MCP Architecture
@@ -325,20 +325,22 @@ section: { title: Capabilities, duration: 3m }
 
 # Capabilities
 
-### Three primitives – three distinct concerns
+### Four primitives (for today) – four distinct concerns
 
-| Primitive    | Purpose                                            | StarAgent example                                               |
-|--------------|----------------------------------------------------|-----------------------------------------------------------------|
-| **Tool**     | Executable function · model calls it, host runs it | `get_chart_position` – where is a song on the charts?           |
-| **Resource** | Read-only data, addressable by URI                 | `rider://artist/van-halen` – Van Halen's backstage requirements |
-| **Prompt**   | Reusable prompt template with placeholders         | `concert_press_release` – generate a dramatic tour announcement |
+| Primitive       | Purpose                                            | StarAgent example                                               |
+|-----------------|----------------------------------------------------|-----------------------------------------------------------------|
+| **Tool**        | Executable function · model calls it, host runs it | `get_chart_position` – where is a song on the charts?           |
+| **Elicitation** | Server asks user for input during a flow           | `book_venue` – asks for missing data before booking             |
+| **Resource**    | Read-only data, addressable by URI                 | `rider://artist/van-halen` – Van Halen's backstage requirements |
+| **Prompt**      | Reusable prompt template with placeholders         | `concert_press_release` – generate a dramatic tour announcement |
 
-<!--
-- Die Semantik der drei Primitive präzise machen:
+<!---
+- Die Semantik der vier Primitive präzise machen::
   - Tool = execute
+  - Elicitation = ask
   - Resource = read
   - Prompt = orchestrate
-- StarAgent-Beispiele direkt zeigen: Wir bauen gleich alle drei live.
+- StarAgent-Beispiele direkt zeigen: Wir bauen gleich alle vier live.
 - Rider erklären: Ein Rider ist das echte Dokument, das jeder Künstler vor einem Konzert einreicht – Bühnenanforderungen, Catering, Sonderwünsche. Van Halens berühmteste Forderung: „Absolutely NO brown M&Ms.“ Das ist ein perfektes Beispiel für eine Resource – stabil, adressierbar, read-only.
 - Enterprise-Brücke: Statt Rider → euer Konfigurations-Dokument, euer OpenAPI-Spec, euer Feature-Spec. Das Prinzip ist identisch.
 -->
@@ -352,10 +354,47 @@ hideInToc: true
 
 - **Tool** → the model needs to _do_ something or fetch dynamic data
 - **Resource** → stable, readable document or data set (like a file or config)
+- **Resource Links** → references that point to resources without embedding their content
 - **Prompt** → standardized, repeatable workflow the model should follow
+- **Tasks** → long-running or background operations that outlive a single request
+- **MCP Apps** → interactive UI rendered by the host (forms, dashboards, visualizations)
+- **Elicitation** → the server needs structured input from the user during a flow
+- **Structured Output** → tool results must conform to a defined schema
+- **Sampling** → the server needs the host's LLM to generate something (server-initiated inference)
+- **OAuth 2.1** → the server requires authenticated access to protected resources
+- **Streamable HTTP** → the transport needs streaming or bidirectional communication
 
 <!--
-- Governance-Hinweis: Die drei Primitiv-Typen haben unterschiedliche Risikoprofile – Tools können Seiteneffekte haben, Resources und Prompts sind read-only.
+- Stand: June, 2026
+- Governance-Hinweis: Die Typen haben unterschiedliche Risikoprofile (Seiteneffekte, read-only, usw.)
+-->
+
+---
+transition: slide-left
+zoom: 0.7
+---
+
+# MCP Feature Support Matrix
+
+> https://mcp-availability.com
+
+| Feature           | Spec-Status             | Client-Realität |
+|-------------------|-------------------------|-----------------|
+| Tool              | ✅ Stabil                | ~100%           |
+| Resource          | ✅ Stabil                | ~39%            |
+| Resource Links    | ✅ Stabil (seit 06/2025) | Niedrig         |
+| Prompt            | ✅ Stabil                | ~38%            |
+| Structured Output | ✅ Stabil (seit 06/2025) | Mittel          |
+| OAuth 2.1         | ✅ Stabil (seit 06/2025) | Mittel          |
+| Streamable HTTP   | ✅ Stabil (seit 03/2025) | Hoch            |
+| Elicitation       | ✅ Stabil (seit 06/2025) | ~11%            |
+| Sampling          | ✅ Stabil (schon lang)   | ~12%            |
+| Tasks             | 🔄 Extension RC         | Kaum            |
+| MCP Apps          | 🔄 Extension RC         | Kaum            |
+
+<!--
+- Inzwischen wie HTML/CSS
+    - https://mcp-availability.com
 -->
 
 ---
@@ -616,6 +655,7 @@ hideInToc: true
 layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
+zoom: 0.9
 hideInToc: true
 ---
 
@@ -623,7 +663,7 @@ hideInToc: true
 
 ---
 transition: slide-left
-section: { title: Implementation, duration: 12m }
+section: { title: Implementation, duration: 15m }
 ---
 
 # .NET SDK
@@ -927,7 +967,7 @@ transition: slide-left
 
 ---
 layout: center
-transition: none
+transition: slide-left
 section: { title: Demo, duration: 5m }
 ---
 
@@ -941,21 +981,49 @@ section: { title: Demo, duration: 5m }
 ---
 transition: slide-left
 layout: terminal
-hide: true
+hideInToc: true
 ---
 
-<Asciinema src="assets/casts/mcp.cast" />
+<Asciinema src="assets/casts/mcp_tools.cast" />
 
 <!--
-- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
-- Wo steht Bohemian Rhapsody von Queen in den Charts?
-- Zeig mir das Backstage-Rider für Van Halen
-    - Hier gibt es diverse Probleme. Ist aber für die Demo nicht schlecht.
-- /mcp__StarAgent__concert_press_release Queen "Metronom Theater Oberhausen" 26.06.2026 "The show must go on!"
+- Wo steht Bohemian Rhapsody von Queen in den Charts? - Natürlich auf der #1!
+- Eine Halle buchen:
+    - Nur Queen und 5000 Personen angeben
+    - MCP fragt nach den fehlenden Parametern
+    - Der Host rendert eine passenden UI (sieht jedes mal anders aus)
 -->
 
 ---
 transition: slide-left
+layout: terminal
+hideInToc: true
+---
+
+<Asciinema src="assets/casts/mcp_resources.cast" />
+
+<!--
+- Zeig mir das Backstage-Rider für Van Halen
+- Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
+-->
+
+---
+transition: slide-left
+layout: terminal
+hideInToc: true
+---
+
+<Asciinema src="assets/casts/mcp_prompt.cast" />
+
+<!--
+- **Wichtig:** Der Prompt wird vom Host ausgeführt. Das Ergebniss wird dann an das LLM übergeben. 
+- /mcp__StarAgent__concert_press_release Queen Metronom_Theater_Oberhausen 26.06.2026 The_show_must_go_on!
+    - Claude parst "..." und "..." nicht.
+    - https://github.com/anthropics/claude-code/issues/70284
+-->
+
+---
+transition: slide-up
 ---
 
 # Debug-Tipp
@@ -1240,7 +1308,7 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
-section: { title: "Q&A", duration: 14m }
+section: { title: "Q&A", duration: 10m }
 ---
 
 # Q&A
