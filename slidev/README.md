@@ -1,11 +1,18 @@
 # Welcome to [Slidev](https://github.com/slidevjs/slidev)!
 
-To start the slide show:
+## Setup
 
 - `npm install`
-- `npm run dev`
-- visit <http://localhost:3030>
 
-Edit the [slides.md](./slides.md) to see the changes.
+## Scripts
+
+- `npm run dev` — start the dev server (opens browser automatically)
+- `npm run live` — start in live audience mode
+- `npm run build` — build static site (hash-based routing)
+- `npm run build:subdir` — build for deployment under `/mcp-talk-dotnet-demo/slidev/dist/`
+- `npm run build:live` — build with live audience mode
+- `npm run export` — export slides to PDF
+
+Edit [slides.md](./slides.md) to change the slides.
 
 Learn more about Slidev at the [documentation](https://sli.dev/).
