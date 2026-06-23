@@ -658,7 +658,7 @@ transition: slide-left
 layout: terminal
 ---
 
-<Asciinema src="/public/assets/casts/createproject.cast"/>
+<Asciinema src="assets/casts/createproject.cast"/>
 
 ---
 layout: codeeditor
@@ -775,7 +775,7 @@ transition: slide-left
 layout: terminal
 ---
 
-<Asciinema src="/public/assets/casts/projectstructure.cast"/>
+<Asciinema src="assets/casts/projectstructure.cast"/>
 
 <!--
 - Kurz die Magie der Demo erklären: Ich habe da schonmal etwas vorbereitet…
@@ -944,7 +944,7 @@ layout: terminal
 hide: true
 ---
 
-<Asciinema src="/public/assets/casts/mcp.cast" />
+<Asciinema src="assets/casts/mcp.cast" />
 
 <!--
 - Rider-Punchline: Van Halen öffnen → „Absolutely NO brown M&Ms" live im Chat auftauchen lassen. 🤘
@@ -1267,4 +1267,4 @@ layout: terminal
 hideFor: live
 ---
 
-<Asciinema src="/public/assets/casts/sw.cast"/>
+<Asciinema src="assets/casts/sw.cast"/>
