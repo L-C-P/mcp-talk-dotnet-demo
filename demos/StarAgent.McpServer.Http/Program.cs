@@ -15,6 +15,6 @@ WebApplication app = builder.Build();
 
 app.UseStaticFiles();
 app.MapGet("/", () => "StarAgent MCP HTTP demo server is running.");
-app.MapMcp();
+app.MapMcp("/mcp");
 
 await app.RunAsync("http://localhost:3001");

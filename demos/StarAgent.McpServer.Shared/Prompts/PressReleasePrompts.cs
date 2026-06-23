@@ -24,7 +24,7 @@ public static class PressReleasePrompts
 
         return
         [
-            new PromptMessage
+            new PromptMessage()
             {
                 Role = Role.User,
                 Content = new TextContentBlock

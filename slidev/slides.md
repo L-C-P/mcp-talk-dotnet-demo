@@ -11,7 +11,7 @@ fonts:
     sans: Fira Sans
     serif: Cambria
 info: |
-    Business Line Meeting · "The Show must go on!" · 60 min · EN slides / DE spoken
+    Business Line Meeting · "The Show Must Go On!" · 60 min · EN slides / DE spoken
 drawings:
     persist: false
     presenterOnly: true
@@ -27,25 +27,25 @@ layout: cover
 hideInToc: true
 class: retro-tv-vcr
 background: "/assets/BLMeetingBackground.png"
-section: { title: Welcome, duration: 3m }
+section: { title: Welcome, duration: 2m }
 ---
 
 # Business<br/>Line Meeting
 
-_The show must go on.<br/>
-Oberhausen. 2026._
+*The Show Must Go On.<br/>
+Oberhausen. 2026.*
 
 ---
 layout: cover
 hideInToc: true
 transition: slide-left
-background: "assets/BLMeetingBackground.png"
+background: "/assets/BLMeetingBackground.png"
 ---
 
 # Business<br/>Line Meeting
 
-_The show must go on.<br/>
-Oberhausen. 2026._
+*The Show Must Go On.<br/>
+Oberhausen. 2026.*
 
 ---
 layout: intro
@@ -75,6 +75,9 @@ hideInToc: true
 Architect, AI-Ambassador<br/>
 BL Microsoft, Hannover
 
+<!--
+Danke an Michael Brünjes
+-->
 
 ---
 layout: center
@@ -88,7 +91,7 @@ hideInToc: true
 <Toc :columns="2" :maxDepth="1" />
 
 <!--
-- Die Präsentation gliedert sich in drei Teile:
+- Die Präsentation gliedert sich in vier Teile:
   - Was ist "MCP"
   - Wie funktioniert "MCP"
   - Wir implementieren "MCP"
@@ -98,7 +101,7 @@ hideInToc: true
 
 ---
 transition: slide-up
-section: { title: "Why MCP Matters", duration: 6m }
+section: { title: "Why MCP Matters", duration: 5m }
 ---
 
 # Why MCP Matters
@@ -132,10 +135,10 @@ zoom: 0.95
 |-----------------------|------------------------------------------------|
 | **Context7**          | Up-to-date library docs and code examples      |
 | **Microsoft Learn**   | Official Microsoft / Azure documentation       |
-| **GitHub**            | Repos, issues, pull requests, code search      |
-| **Azure**             | Azure resources, subscriptions, deployments    |
-| **Jira / Confluence** | Tickets, pages, project data                   |
 | **Azure DevOps**      | Work items, pipelines, repos, boards           |
+| **GitHub**            | Repos, issues, pull requests, code search      |
+| **Jira / Confluence** | Tickets, pages, project data                   |
+| **Azure**             | Azure resources, subscriptions, deployments    |
 | **Playwright**        | Browser automation and web scraping            |
 | **Chrome DevTools**   | Live browser inspection, console, network, DOM |
 
@@ -153,8 +156,8 @@ transition: slide-left
 ### Model Context Protocol
 
 - **Wire protocol:** JSON-RPC 2.0 – both sides speak structured text
-- **Capability model:** Tools · Resources · Prompts, Tasks, MCP Apps, Elicitation, Structured Output, Resource Links,
-  OAuth 2.1, Sampling, Streamable HTTP
+- **Capability model:** Tools · Resources · Resource Links · Prompts · Tasks · MCP Apps · Elicitation · Structured
+  Output · OAuth 2.1 · Sampling · Streamable HTTP
 - **Lifecycle management:** connection setup, capability discovery, invocation, teardown
 - **Interoperability:** one server works with any MCP-compatible host
 - **Transports:** `stdio` for local processes · `Streamable HTTP` for remote services
@@ -163,25 +166,15 @@ transition: slide-left
 
 <!--
 - MCP als Protokoll einordnen, nicht als Bibliothek oder Framework.
-- JSON-RPC 2.0 hervorheben: Host und Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
-- Alte Feastures: Tools, Resources,Prompts
-- Neue Features:
-    - *Tasks (asynchrone Ausführung)*
-    - ~~MCP Apps (UI-Rendering)~~
-    - Elicitation (Server fragt User)
-    - Structured Output
-    - Resource Links
-    - OAuth 2.1 / Authorization
-    - Sampling (Server → LLM)
-    - Streamable HTTP / SSE-Resumability (Client reconnect)
-    
+- JSON-RPC 2.0 hervorheben: Der MCP Client (im Host) und der Server tauschen schlicht strukturierten Text aus – dazu gleich mehr.
+- Capabilities - dazu gleich mehr.
 - Transport kurz erwähnen: lokal läuft es über stdio (Standard-Ein-/Ausgabe), remote über HTTP. Details kommen im Architektur-Diagramm.
 - Interoperabilität betonen: ein MCP-Server in .NET funktioniert mit GitHub Copilot, Claude Desktop, VS Code und jedem anderen MCP-Host.
 -->
 
 ---
 transition: fade
-section: { title: Architecture, duration: 8m }
+section: { title: Architecture, duration: 6m }
 ---
 
 # MCP Architecture
@@ -284,8 +277,8 @@ flowchart LR
 <!--
 - Die drei Rollen klar abgrenzen:
   - Host = AI-App
-  - Client = Protokollschicht im Host
-  - Server = Fähigkeiten-Anbieter
+  - MCP Client = Protokollschicht im Host
+  - MCP Server = Fähigkeiten-Anbieter
 - Wichtiger Punkt: Host und Server können unabhängig voneinander entwickelt werden – das ist die Stärke des Standards.
 - Der Host kann mehrere Clients gleichzeitig nutzen.
 - Diagramm erläutern: lokal über stdio (einfach, schnell, für Entwicklung), remote über HTTP (produktionstauglich, skalierbar).
@@ -320,27 +313,27 @@ hideInToc: true
 
 ---
 transition: slide-up
-section: { title: Capabilities, duration: 3m }
+section: { title: Capabilities, duration: 4m }
 ---
 
 # Capabilities
 
-### Four primitives (for today) – four distinct concerns
+### Three primitives – plus one interaction mechanism
 
-| Primitive       | Purpose                                            | StarAgent example                                               |
-|-----------------|----------------------------------------------------|-----------------------------------------------------------------|
-| **Tool**        | Executable function · model calls it, host runs it | `get_chart_position` – where is a song on the charts?           |
-| **Elicitation** | Server asks user for input during a flow           | `book_venue` – asks for missing data before booking             |
-| **Resource**    | Read-only data, addressable by URI                 | `rider://artist/van-halen` – Van Halen's backstage requirements |
-| **Prompt**      | Reusable prompt template with placeholders         | `concert_press_release` – generate a dramatic tour announcement |
+| Capability      | Kind                  | StarAgent example                                                |
+|-----------------|-----------------------|------------------------------------------------------------------|
+| **Tool**        | Server primitive      | `get_chart_position` and `book_venue` – executable operations    |
+| **Resource**    | Server primitive      | `rider://artist/van-halen` – Van Halen's backstage requirements  |
+| **Prompt**      | Server primitive      | `concert_press_release` – generate a dramatic tour announcement  |
+| **Elicitation** | Interaction mechanism | `book_venue` can ask for missing booking details during the flow |
 
-<!---
-- Die Semantik der vier Primitive präzise machen::
-  - Tool = execute
-  - Elicitation = ask
-  - Resource = read
-  - Prompt = orchestrate
-- StarAgent-Beispiele direkt zeigen: Wir bauen gleich alle vier live.
+<!--
+- Die Semantik präzise machen:
+  - Tool = execute, registrierbares Primitive, kann Seiteneffekte haben
+  - Resource = read, registrierbares Primitive, stabil und adressierbar
+  - Prompt = template, registrierbares Primitive für wiederholbare Workflows
+  - Elicitation = structured user input during a flow, Mechanismus innerhalb eines Tool-/Server-Flows, kein eigenes Demo-Primitive
+- StarAgent-Beispiele direkt zeigen: Wir bauen die drei registrierbaren Kategorien live. `book_venue` zeigt zusätzlich Elicitation, wenn Buchungsdaten fehlen.
 - Rider erklären: Ein Rider ist das echte Dokument, das jeder Künstler vor einem Konzert einreicht – Bühnenanforderungen, Catering, Sonderwünsche. Van Halens berühmteste Forderung: „Absolutely NO brown M&Ms.“ Das ist ein perfektes Beispiel für eine Resource – stabil, adressierbar, read-only.
 - Enterprise-Brücke: Statt Rider → euer Konfigurations-Dokument, euer OpenAPI-Spec, euer Feature-Spec. Das Prinzip ist identisch.
 -->
@@ -365,36 +358,37 @@ hideInToc: true
 - **Streamable HTTP** → the transport needs streaming or bidirectional communication
 
 <!--
-- Stand: June, 2026
+- Das ist eine kompakte Übersicht aktueller MCP-Primitives, Features und Extensions: Stand June 2026.
 - Governance-Hinweis: Die Typen haben unterschiedliche Risikoprofile (Seiteneffekte, read-only, usw.)
 -->
 
 ---
 transition: slide-left
-zoom: 0.7
+zoom: 0.65
 ---
 
 # MCP Feature Support Matrix
 
 > https://mcp-availability.com
 
-| Feature           | Spec-Status             | Client-Realität |
-|-------------------|-------------------------|-----------------|
-| Tool              | ✅ Stabil                | ~100%           |
-| Resource          | ✅ Stabil                | ~39%            |
-| Resource Links    | ✅ Stabil (seit 06/2025) | Niedrig         |
-| Prompt            | ✅ Stabil                | ~38%            |
-| Structured Output | ✅ Stabil (seit 06/2025) | Mittel          |
-| OAuth 2.1         | ✅ Stabil (seit 06/2025) | Mittel          |
-| Streamable HTTP   | ✅ Stabil (seit 03/2025) | Hoch            |
-| Elicitation       | ✅ Stabil (seit 06/2025) | ~11%            |
-| Sampling          | ✅ Stabil (schon lang)   | ~12%            |
-| Tasks             | 🔄 Extension RC         | Kaum            |
-| MCP Apps          | 🔄 Extension RC         | Kaum            |
+# MCP Feature Support Matrix
+
+| Feature           | Spec Status              | Client Reality |
+|-------------------|--------------------------|----------------|
+| Tool              | ✅ Stable                 | ~100%          |
+| Resource          | ✅ Stable                 | ~39%           |
+| Resource Links    | ✅ Stable (since 06/2025) | Low            |
+| Prompt            | ✅ Stable                 | ~38%           |
+| Structured Output | ✅ Stable (since 06/2025) | Medium         |
+| OAuth 2.1         | ✅ Stable (since 06/2025) | Medium         |
+| Streamable HTTP   | ✅ Stable (since 03/2025) | High           |
+| Elicitation       | ✅ Stable (since 06/2025) | ~11%           |
+| Sampling          | ✅ Stable (long-standing) | ~12%           |
+| Tasks             | 🔄 Extension RC          | Minimal        |
+| MCP Apps          | 🔄 Extension RC          | Minimal        |
 
 <!--
-- Inzwischen wie HTML/CSS
-    - https://mcp-availability.com
+- Inzwischen wie HTML/CSS: https://mcp-availability.com
 -->
 
 ---
@@ -406,29 +400,48 @@ section: { title: Runtime, duration: 3m }
 
 ### The LLM never sees MCP
 
-The **host** is embedded in the client application (Claude Code, Warp, GitHub Copilot, …).
-It knows two languages: **MCP** on one side, and the **LLM's native format** on the other.
+The **host** is the AI application (Claude Code, Warp, GitHub Copilot, …).
+Its embedded **MCP client** speaks two languages: **MCP** on one side, and the **LLM's native tool format** on the
+other.
 
 ```text
 MCP Server (.NET)
     ↕  always: MCP / JSON-RPC 2.0
-Host (embedded in client)
+MCP Client (embedded in host)
     ↕  translated to the LLM's format:
         Claude Code / Warp  →  Anthropic Tool Use  →  injected into system prompt
         GitHub Copilot       →  OpenAI Function Calling
         Gemini               →  Google Function Calling
+Host application
+    ↕  conversation and policy control
 LLM
 ```
 
-The MCP server never knows which LLM or client is on the other end.
+The MCP server never knows which LLM or host application is on the other end.
 One server works with every MCP-compatible host – the host handles the translation.
 
 <!--
-- Kernbotschaft deutlich machen: LLM und MCP-Server sprechen **nie direkt** miteinander. Der Host ist immer der Vermittler und die Kontrollinstanz.
+- Kernbotschaft deutlich machen: LLM und MCP-Server sprechen **nie direkt** miteinander. Der Host ist die AI-App und bleibt die Kontrollinstanz; der eingebettete MCP Client übernimmt die Protokollschicht.
 - JSON-RPC 2.0 ist kein Hexenwerk – es sind strukturierte Textnachrichten mit `method`, `params` und `result`.
 - Auf Git folgen weitere Folien, mit detalierteren Beschreibungen.
 - Dann kommen wir zu: **Wir implementieren "MCP"**
 -->
+
+---
+transition: slide-left
+hideInToc: true
+hideFor: live
+---
+
+# Lifecycle Calls
+
+### For reference
+
+| Phase      | Call                                             | Direction       |
+|------------|--------------------------------------------------|-----------------|
+| Setup      | `initialize` + `notifications/initialized`       | Client → Server |
+| Discovery  | `tools/list` · `resources/list` · `prompts/list` | Client → Server |
+| Invocation | `tools/call` · `resources/read` · `prompts/get`  | Client → Server |
 
 ---
 zoom: 0.75
@@ -475,7 +488,7 @@ hideFor: live
 ```
 
 <!--
-- Discovery-Vorgang: Der Host fragt den Server nach seinen Fähigkeiten und übersetzt das in Function-Definitions für das Modell.
+- Discovery-Vorgang: Der MCP Client im Host ruft die Fähigkeiten des Servers ab und übersetzt sie in Function-Definitions für das Modell.
 - Highlight: Das LLM „sieht“ nur die Tool-Schemata – es weiß nicht, ob dahinter .NET, Python oder ein Toaster steckt.
 -->
 
@@ -572,7 +585,7 @@ hideInToc: true
 ```
 
 <!--
-- Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
+- Der Host entscheidet (Policy-Check, ggf. User-Approval); der MCP Client im Host schickt dann `tools/call` an den Server.
 -->
 
 ---
@@ -601,7 +614,7 @@ hideInToc: true
 ```
 
 <!--
-- Host führt den Tool-Call aus (policy check, ggf. user approval) und schickt das Ergebnis als neuen Context an das Modell.
+- Der Server antwortet dem MCP Client; der Host reicht das Ergebnis als neuen Context an das Modell weiter.
 -->
 
 ---
@@ -626,7 +639,7 @@ sequenceDiagram
     MCP -->> Host: { rank: 1, peak: 1, weeks: 52 }
     Host ->> LLM: Tool result as new context
     LLM -->> Host: Final answer
-    Host -->> User: "Bohemian Rhapsody is#1 – as always."
+    Host -->> User: "Bohemian Rhapsody is No. 1 – as always."
 ```
 
 <!--
@@ -636,34 +649,18 @@ sequenceDiagram
 -->
 
 ---
-transition: slide-left
-hideFor: live
-hideInToc: true
----
-
-# Lifecycle Calls
-
-### For reference
-
-| Phase      | Call                                             | Direction       |
-|------------|--------------------------------------------------|-----------------|
-| Setup      | `initialize` + `notifications/initialized`       | Client → Server |
-| Discovery  | `tools/list` · `resources/list` · `prompts/list` | Client → Server |
-| Invocation | `tools/call` · `resources/read` · `prompts/get`  | Client → Server |
-
----
 layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 zoom: 0.9
 hideInToc: true
+section: { title: Implementation, duration: 12m }
 ---
 
 # Implementation
 
 ---
 transition: slide-left
-section: { title: Implementation, duration: 15m }
 ---
 
 # .NET SDK
@@ -688,7 +685,7 @@ dotnet add package ModelContextProtocol
 ```
 
 <!--
-- SDK einordnen: War gerade noch Preview-Paket. Jetzt Version 1.4.
+- SDK einordnen: War gerade noch Preview-Paket. Jetzt Version 1.4 (June 2026).
 - **Überleitung:** Genug geredet, wir erstellen das StarAgent Projekt.
 -->
 
@@ -751,6 +748,10 @@ hideInToc: true
 
 > // Program.cs
 <<< @/snippets/Program.cs {12}
+
+<!--
+- Erledigt DI
+-->
 
 ---
 layout: codeeditor
@@ -912,7 +913,8 @@ public static class RiderResources
     }
 ```
 
-- **Hinweis:** Der Host kann auf ein Update der Resource abonieren und wird dann entsprechend benachrichtigt.
+- **Hinweis:** MCP unterstützt Resource Subscriptions, wenn der Server sie anbietet; der Host kann dann über Änderungen benachrichtigt werden.
+- Inzwischen gibt es auch Resource Links
 -->
 
 ---
@@ -930,10 +932,17 @@ layout: codeeditor
 transition: slide-left
 ---
 
-> // McpServerPromptType.cs
+> // PressReleasePrompts.cs
 
 <CodeBlockSync />
 <<< @/snippets/PressReleasePrompts.cs {maxHeight: '440px'}
+
+<!--
+- Prompt klar von Tool abgrenzen: Der Prompt wird nicht ausgeführt und hat keine Seiteneffekte.
+- Der Server liefert ein wiederverwendbares Prompt-Template als Prompt Messages zurück.
+- Der Host ruft den Prompt ab und gibt die resultierenden Messages an das LLM weiter; der MCP-Server ruft das LLM nicht selbst auf.
+- StarAgent-Bezug: `concert_press_release` standardisiert die Dramaturgie für die Tour-Ankündigung.
+-->
 
 ---
 title: Register MCP
@@ -962,13 +971,12 @@ transition: slide-left
 
 <!--
 - Jetzt den MCP in der Konfiguration hinzufügen.
-- ClaudeCode erkennt den MCP automatisch (.mcp/server.json).
 -->
 
 ---
 layout: center
 transition: slide-left
-section: { title: Demo, duration: 5m }
+section: { title: Demo, duration: 7m }
 ---
 
 # Demo
@@ -990,7 +998,7 @@ hideInToc: true
 - Wo steht Bohemian Rhapsody von Queen in den Charts? - Natürlich auf der #1!
 - Eine Halle buchen:
     - Nur Queen und 5000 Personen angeben
-    - MCP fragt nach den fehlenden Parametern
+    - MCP fragt nach den fehlenden Parametern (Elicitation)
     - Der Host rendert eine passenden UI (sieht jedes mal anders aus)
 -->
 
@@ -1016,17 +1024,18 @@ hideInToc: true
 <Asciinema src="assets/casts/mcp_prompt.cast" />
 
 <!--
-- **Wichtig:** Der Prompt wird vom Host ausgeführt. Das Ergebniss wird dann an das LLM übergeben. 
+- **Wichtig:** Der Prompt wird vom Host ausgeführt. Das Ergebnis wird dann an das LLM übergeben. 
 - /mcp__StarAgent__concert_press_release Queen Metronom_Theater_Oberhausen 26.06.2026 The_show_must_go_on!
     - Claude parst "..." und "..." nicht.
     - https://github.com/anthropics/claude-code/issues/70284
 -->
 
 ---
-transition: slide-up
+transition: slide-left
+section: { title: "Deployment Options", duration: 4m }
 ---
 
-# Debug-Tipp
+# Debugging Tip
 
 > npx @modelcontextprotocol/inspector
 
@@ -1065,7 +1074,6 @@ var result = await client.CallToolAsync("get_chart_position",
 
 ---
 transition: slide-left
-section: { title: "Deployment Options", duration: 3m }
 ---
 
 # HTTP Transport: Reference
@@ -1078,7 +1086,7 @@ dotnet add package ModelContextProtocol.AspNetCore
 
 > // Program.cs
 
-```csharp {monaco-diff}  {height:'270px'}
+```csharp {monaco-diff}  {height:'280px'}
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
@@ -1099,10 +1107,9 @@ builder.Services
     .WithToolsFromAssembly()
     .WithResourcesFromAssembly()
     .WithPromptsFromAssembly();
-builder.AddDevUI();
 
 var app = builder.Build();
-app.MapMcp();
+app.MapMcp("/mcp");
 await app.RunAsync("http://localhost:3001");
 ```
 
@@ -1162,9 +1169,10 @@ await builder.Build().RunAsync();
 ```
 
 <!--
+- Diese Folie zeigt bewusst nur den Azure-Functions-Host-Wrapper; die konkrete MCP-HTTP-Anbindung hängt vom verwendeten SDK-/Binding-Ansatz ab.
 - Azure Functions isolated worker ist das moderne Modell (.NET 8 / .NET 10) – nicht den älteren in-process-Host verwenden.
 - Die Tool-/Resource-/Prompt-Klassen bleiben identisch zu stdio und ASP.NET Core – nur der Host-Wrapper ändert sich.
-- `McpServerHttpHandler` ist die abstrakte Komponente, die HTTP-Request/-Response in das MCP-Protokoll übersetzt. Exakter API-Name kann je nach SDK-Version variieren – vor dem Event prüfen.
+- `McpServerHttpHandler` beziehungsweise die jeweilige Trigger-/Handler-API übersetzt HTTP-Request/-Response in das MCP-Protokoll. Exakte API-Namen vor dem Event gegen SDK-Version und Demo-Repo prüfen.
 - Stateless-Transport-Hinweis: Azure Functions sind zustandslos. Damit ist kein Sampling möglich.
 - Produktionsrelevanz: Viele Enterprise-Teams, die bereits Functions nutzen, können so MCP-Fähigkeiten mit minimaler Infrastruktur exposieren.
 - Auth: Function-Keys für einfache Szenarien, Azure AD für Unternehmensumgebungen.
@@ -1199,69 +1207,112 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
+section: { title: Outlook, duration: 5m }
 ---
 
 # Outlook
 
 ---
 transition: slide-up
-zoom: 0.95
-section: { title: Outlook, duration: 5m }
+zoom: 0.88
 ---
 
 # Auto-Discovery
 
-### `/.well-known/mcp.json` — SEP-1649 (decentralised)
+### Server Cards — SEP-2127 (formerly SEP-1649, draft)
 
 ```json
 {
-    "mcpServers": {
-        "star-agent": {
-            "url": "https://yourdomain.com/mcp",
-            "name": "StarAgent",
-            "description": "AI tour manager for concerts and artists"
-        }
+    "protocolVersion": "2025-06-18",
+    "serverInfo": {
+        "name": "star-agent",
+        "title": "StarAgent",
+        "version": "1.0.0"
+    },
+    "description": "AI tour manager for concerts and artists",
+    "transport": {
+        "type": "streamable-http",
+        "endpoint": "https://yourdomain.com/mcp"
     }
 }
 ```
 
-### `/.well-known/mcp/server.json` — Registry approach (centralised)
-
-```json
-{
-    "name": "StarAgent",
-    "description": "AI tour manager for concerts and artists",
-    "url": "https://yourdomain.com/mcp",
-    "categories": [
-        "entertainment",
-        "events"
-    ]
-}
-```
+| Model                         | Where                                                               | Purpose                  |
+|-------------------------------|---------------------------------------------------------------------|--------------------------|
+| **Decentralised Server Card** | `/.well-known/mcp.json` · older `/.well-known/mcp/server-card.json` | Server-owned discovery   |
+| **Official Registry**         | `registry.modelcontextprotocol.io`                                  | Curated searchable index |
 
 <!--
-- Einordnung: Das ist Stand 2025/2026 – aktiv in Entwicklung, noch nicht überall implementiert.
-- SEP-1649-Analogie: Kennt ihr `robots.txt`? Ein Agent besucht eine Website und schaut nach `/.well-known/mcp.json` – und findet damit automatisch alle MCP-Fähigkeiten dieser Domain. Kein zentrales Verzeichnis nötig.
-- Registry-Analogie: Wie der App Store. Der MCP-Server meldet sich einmal an, und alle Clients können ihn über die Registry finden.
-- Warum beide? SEP-1649 ist perfekt für autonome Agenten, die im Web unterwegs sind. Die Registry ist perfekt für kuratierte, vertrauenswürdige Verzeichnisse in Enterprise-Umgebungen.
+- Einordnung: SEP-2127, ehemals SEP-1649, ist weiterhin Draft und noch nicht Teil des Core-Protokolls.
+- Wichtig: Beide well-known-Pfade beschreiben denselben dezentralen Server-Card-Ansatz. Der ältere Draft-Pfad heißt `/.well-known/mcp/server-card.json`, nicht `server.json`.
+- Analogie: Kennt ihr `robots.txt`? Ein Agent besucht eine Website und schaut nach `/.well-known/mcp.json` – und findet damit automatisch, wo der MCP-Server dieser Domain erreichbar ist.
+- Registry-Analogie: Wie ein App Store. Der MCP-Server wird zentral gelistet, damit Clients und Menschen ihn suchen und kuratiert bewerten können.
+- Praxis-Hinweis: Wer heute vorbereitet sein will, plant `/.well-known/mcp.json` ein und kann optional den älteren `server-card.json`-Pfad als Alias bereitstellen.
 -->
 
 ---
-transition: slide-left
+transition: slide-up
 ---
 
 # Discovery Models
 
 ```mermaid
 flowchart LR
-    A["AI Agent"] -->|" visits URL "| B["/.well-known/mcp.json<br/>(SEP-1649)"]
-    A -->|" searches "| C["Central Registry<br/>(Anthropic / GitHub / MS)"]
-    B -->|" decentralised<br/>zero-config "| D["MCP Server"]
-    C -->|" curated<br/>App-Store "| D
+    A["AI Agent"] -->|" visits domain "| B["Server Card<br/>/.well-known/mcp.json<br/>(older: /.well-known/mcp/server-card.json)"]
+    A -->|" searches "| C["Official Registry<br/>registry.modelcontextprotocol.io"]
+    B -->|" decentralised<br/>server-owned "| D["MCP Server"]
+    C -->|" centralised<br/>curated index "| D
 ```
 
 <!--
-- Praxishinweis: Wer heute einen MCP-Server baut, sollte `/.well-known/mcp.json` schon vorsehen – der Aufwand ist minimal, der Zukunftswert groß.
+- Praxishinweis: Server Cards und Registry ergänzen sich. Die Website liefert die autoritative Selbstbeschreibung, die Registry liefert Auffindbarkeit.
+-->
+
+---
+transition: slide-left
+hideInToc: true
+---
+
+> https://modelcontextprotocol.io/registry
+
+<img src="@/public/assets/ecosystem-diagram.svg" alt="Ecosystem Diagram" class = "h-100">
+
+---
+transition: slide-left
+---
+
+# A2UI - A Protocol for Agent-Driven Interfaces
+
+> https://a2ui.org
+
+**Problem:** How can AI agents safely send rich UIs across trust boundaries?
+
+**Solution:** Agents send declarative JSON → clients render with native widgets
+
+```json
+  {
+    "type": "button",
+    "label": "Search",
+    "onTap": {
+        "actionId": "search"
+    }
+}
+```
+
+- **Secure** — declarative data, not code; only pre-approved components
+- **LLM-friendly** — easy to generate, stream, and update
+- **Framework-agnostic** — same payload for Angular, Flutter, React, …
+- **MCP-ready** — delivers UI via tool responses and resources
+
+<!--
+- A2UI ist von Google gestartet, Apache 2.0, mit Contributions von CopilotKit.
+- A2UI ist kein MCP-Core-Feature, sondern ein ergänzender UI-Ansatz für agentengetriebene Interfaces.
+- MCP-ready bedeutet hier: Solche UI-Payloads können über Tool Responses oder Resources transportiert werden, aber MCP selbst definiert nicht den UI-Komponentenkatalog.
+- Wichtig: Der Agent darf nur Komponenten aus einem vorab definierten Katalog verwenden – keine UI-Injection. **button** ist eine von vielen Komponenten aus einem Katalog,
+- Beispiel: Agent schickt JSON mit "text-field" und "button" – der Client rendert das mit seinen eigenen nativen Widgets.
+- Transport ist flexibel: A2A, AG-UI, oder jedes andere Protokoll das JSON tragen kann.
+- Use Cases: Dynamische Formulare, Remote Sub-Agenten die UI zurückliefern, adaptive Dashboards.
+- MIME-Type: application/a2ui+json
 -->
 
 ---
@@ -1275,7 +1326,8 @@ transition: slide-left
   `Resource Links` · `OAuth 2.1` · `Sampling` · `Streamable HTTP`
 - **The host is the control layer** – the LLM proposes, the host decides
 - **Transport is a deployment decision** – stdio locally, HTTP remotely, Functions serverlessly
-- **Auto-discovery is coming** – `/.well-known/mcp.json` and central registries
+- **Auto-discovery is emerging** – server cards via `/.well-known/mcp.json`, plus central registries
+- **UI is coming** – `a2ui.org`
 - **Start small:** one tool · one server · connect to your host
 
 <!--
@@ -1286,12 +1338,14 @@ transition: slide-left
 
 ---
 transition: slide-left
+zoom: 0.95
 ---
 
 # Where to go next
 
 | Resource                          | Link                                                         |
 |-----------------------------------|--------------------------------------------------------------|
+| Awesome MCP servers               | `github.com/punkpeye/awesome-mcp-servers`                    |
 | Official MCP Registry (preview)   | `modelcontextprotocol.io/registry`                           |
 | Community MCP Directory (curated) | `mcp.directory/awesome-mcp-servers`                          |
 | MCP specification                 | `modelcontextprotocol.io/specification`                      |
@@ -1308,7 +1362,7 @@ layout: section
 transition: slide-left
 background: "/assets/SectionBackground.png"
 hideInToc: true
-section: { title: "Q&A", duration: 10m }
+section: { title: "Q&A", duration: 11m, buffer: true }
 ---
 
 # Q&A
