@@ -700,6 +700,7 @@ layout: terminal
 ---
 layout: codeeditor
 transition: none
+title: "Program.cs"
 ---
 
 > // Program.cs
@@ -713,6 +714,7 @@ transition: none
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – Usings & Builder"
 ---
 
 > // Program.cs
@@ -722,6 +724,7 @@ hideInToc: true
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – Logging to stderr"
 ---
 
 > // Program.cs
@@ -735,6 +738,7 @@ hideInToc: true
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – MCP Services"
 ---
 
 > // Program.cs
@@ -744,6 +748,7 @@ hideInToc: true
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – AddMcpServer()"
 ---
 
 > // Program.cs
@@ -757,6 +762,7 @@ hideInToc: true
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – stdio Transport"
 ---
 
 > // Program.cs
@@ -770,6 +776,7 @@ hideInToc: true
 layout: codeeditor
 transition: none
 hideInToc: true
+title: "Program.cs – Register Capabilities"
 ---
 
 > // Program.cs
@@ -785,6 +792,7 @@ hideInToc: true
 layout: codeeditor
 transition: slide-left
 hideInToc: true
+title: "Program.cs – Build & Run"
 ---
 
 > // Program.cs
@@ -796,6 +804,7 @@ hideInToc: true
 
 ---
 transition: slide-left
+title: "Demo Capabilities"
 ---
 
 ### Demo capabilities
@@ -814,6 +823,7 @@ transition: slide-left
 hideInToc: true
 transition: slide-left
 layout: terminal
+title: "Project Structure"
 ---
 
 <Asciinema src="assets/casts/projectstructure.cast"/>
@@ -827,6 +837,7 @@ layout: terminal
 layout: codeeditor
 transition: slide-left
 showFor: live
+title: "ChartTools.cs (live)"
 ---
 
 > // ChartTools.cs
@@ -869,6 +880,7 @@ public static class ChartTools
 layout: codeeditor
 transition: slide-left
 hideFor: live
+title: "ChartTools.cs"
 ---
 
 > // ChartTools.cs
@@ -880,6 +892,7 @@ hideFor: live
 layout: codeeditor
 transition: slide-left
 showFor: live
+title: "RiderResources.cs (live)"
 ---
 
 > // RiderResources.cs
@@ -921,6 +934,7 @@ public static class RiderResources
 layout: codeeditor
 transition: slide-left
 hideFor: live
+title: "RiderResources.cs"
 ---
 
 > // RiderResources.cs
@@ -930,6 +944,7 @@ hideFor: live
 ---
 layout: codeeditor
 transition: slide-left
+title: "PressReleasePrompts.cs"
 ---
 
 > // PressReleasePrompts.cs
@@ -990,6 +1005,7 @@ section: { title: Demo, duration: 7m }
 transition: slide-left
 layout: terminal
 hideInToc: true
+title: "Demo: Tools"
 ---
 
 <Asciinema src="assets/casts/mcp_tools.cast" />
@@ -1006,6 +1022,7 @@ hideInToc: true
 transition: slide-left
 layout: terminal
 hideInToc: true
+title: "Demo: Resources"
 ---
 
 <Asciinema src="assets/casts/mcp_resources.cast" />
@@ -1019,6 +1036,7 @@ hideInToc: true
 transition: slide-left
 layout: terminal
 hideInToc: true
+title: "Demo: Prompt"
 ---
 
 <Asciinema src="assets/casts/mcp_prompt.cast" />
@@ -1271,6 +1289,7 @@ flowchart LR
 ---
 transition: slide-left
 hideInToc: true
+title: "MCP Ecosystem"
 ---
 
 > https://modelcontextprotocol.io/registry
@@ -1370,6 +1389,7 @@ section: { title: "Q&A", duration: 11m, buffer: true }
 ---
 transition: slide-up
 hideInToc: true
+title: "Thank you"
 layout: cover
 background: "/assets/BLMeetingBackground.png"
 section: { title: "Bye", duration: 1m }
@@ -1387,6 +1407,7 @@ section: { title: "Bye", duration: 1m }
 zoom: 1.7
 layout: terminal
 hideFor: live
+title: "Bonus"
 ---
 
 <Asciinema src="assets/casts/sw.cast"/>
