@@ -3,7 +3,9 @@ import { slides } from '#slidev/slides'
 
 export default defineAppSetup(({ router }) => {
   const normalizePresenterPath = (path: string) => {
-    return path.replace(/^\/presenter\/(?:presenter\/)+/, '/presenter/')
+    return path
+      .replace(/^\/presenter\.\//, '/presenter/')
+      .replace(/^\/presenter\/(?:presenter\/)+/, '/presenter/')
   }
 
   const getPresenterSlideId = (path: string) => {
