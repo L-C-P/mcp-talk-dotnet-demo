@@ -18,6 +18,7 @@ drawings:
 addons:
     - slidev-addon-timing-bar
     - slidev-addon-animated-text
+    - slidev-addon-second-screen
 transition: fade
 duration: 60min
 timer: countdown
@@ -1066,7 +1067,7 @@ section: { title: "Deployment Options", duration: 4m }
 
 > npx @modelcontextprotocol/inspector
 
-<img src="@/public/assets/Inspector.png" alt="MCP Inspector" class = "h-100">
+<img src="/assets/Inspector.png" alt="MCP Inspector" class = "h-100">
 
 <!--
 - Features:
@@ -1305,7 +1306,7 @@ title: "MCP Ecosystem"
 
 > https://modelcontextprotocol.io/registry
 
-<img src="@/public/assets/ecosystem-diagram.svg" alt="Ecosystem Diagram" class = "h-100">
+<img src="/assets/ecosystem-diagram.svg" alt="Ecosystem Diagram" class = "h-100">
 
 ---
 transition: slide-left
