@@ -41,6 +41,7 @@ layout: cover
 hideInToc: true
 transition: slide-left
 background: "/assets/BLMeetingBackground.png"
+hide: true
 ---
 
 # Business<br/>Line Meeting
