@@ -19,6 +19,7 @@ addons:
     - slidev-addon-timing-bar
     - slidev-addon-animated-text
     - slidev-addon-second-screen
+    - slidev-addon-audience-filter
 transition: fade
 duration: 60min
 timer: countdown
