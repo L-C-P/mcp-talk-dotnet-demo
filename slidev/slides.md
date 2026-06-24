@@ -848,7 +848,7 @@ title: "Project Structure"
 layout: codeeditor
 transition: slide-left
 showFor: live
-title: "ChartTools.cs (live)"
+title: "ChartTools.cs"
 ---
 
 > // ChartTools.cs
@@ -903,7 +903,7 @@ title: "ChartTools.cs"
 layout: codeeditor
 transition: slide-left
 showFor: live
-title: "RiderResources.cs (live)"
+title: "RiderResources.cs"
 ---
 
 > // RiderResources.cs
@@ -1406,11 +1406,31 @@ title: "Thank you"
 layout: cover
 background: "/assets/BLMeetingBackground.png"
 section: { title: "Bye", duration: 1m }
+showFor: live
 ---
 
 <animated-text text-8xl text-primary text="Thank you!" />
 
-<img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-40">
+<img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-80">
+<img src="@/assets/Rating.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-64 w-80">
+
+<!--
+- Demo-Repo oder Slides-Link zum Nachschlagen kommunizieren.
+-->
+
+---
+transition: slide-up
+hideInToc: true
+title: "Thank you"
+layout: cover
+background: "/assets/BLMeetingBackground.png"
+section: { title: "Bye", duration: 1m }
+hideFor: live
+---
+
+<animated-text text-8xl text-primary text="Thank you!" />
+
+<img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-80">
 
 <!--
 - Demo-Repo oder Slides-Link zum Nachschlagen kommunizieren.
