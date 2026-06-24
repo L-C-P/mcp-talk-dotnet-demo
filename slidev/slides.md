@@ -813,6 +813,17 @@ title: "Program.cs – Build & Run"
 -->
 
 ---
+layout: codeeditor
+transition: none
+hideInToc: true
+hideFor: live
+title: "Program.cs"
+---
+
+> // Program.cs
+<<< @/snippets/Program.cs {7-8,12-16}
+
+---
 transition: slide-left
 title: "Demo Capabilities"
 ---
