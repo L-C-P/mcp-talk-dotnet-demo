@@ -31,7 +31,9 @@ The deck uses hash routing for GitHub Pages compatibility, so direct slide URLs 
     - `npm install`
 2. Start presentation in dev mode:
     - `npm run dev`
-3. Build static output:
+3. Start presentation for live delivery (sets `AUDIENCE=live`):
+    - `npm run live`
+4. Build static output:
     - `npm run build`
 
 ## Demo projects
