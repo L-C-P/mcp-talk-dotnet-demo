@@ -19,7 +19,7 @@ addons:
     - slidev-addon-timing-bar
     - slidev-addon-animated-text
     - slidev-addon-second-screen
-transition: fade
+transition: slide-left
 duration: 60min
 timer: countdown
 wakeLock: false
