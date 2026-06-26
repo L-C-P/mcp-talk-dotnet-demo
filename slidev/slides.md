@@ -1442,6 +1442,7 @@ hideFor: live
 <animated-text text-8xl text-primary text="Thank you!" />
 
 <img src="@/assets/QR.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-16 w-80">
+<img src="@/assets/Rating.svg" alt="https://github.com/L-C-P/mcp-talk-dotnet-demo" class="absolute right-16 top-64 w-80">
 
 <!--
 - Demo-Repo oder Slides-Link zum Nachschlagen kommunizieren.
